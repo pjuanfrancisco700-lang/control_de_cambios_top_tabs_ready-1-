@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Control de Cambios</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+  <link rel="manifest" href="manifest.webmanifest"/>
+  <style>
+    :root{ --bg:#0b0b0f; --card:#111216; --text:#F8FAFC; --muted:#9CA3AF;
+      --accent:#3B82F6; --danger:#EF4444; --success:#22C55E; --border:#20222a;
+      --shadow:0 8px 24px rgba(0,0,0,.45); --radius:20px; }
+    [data-theme="light"]{ --bg:#F2F2F7; --card:#FFFFFF; --text:#111; --muted:#6B7280;
+      --accent:#007AFF; --danger:#FF3B30; --success:#34C759; --border:#E5E7EB;
+      --shadow:0 8px 24px rgba(0,0,0,.06); }
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.4}
+    .app{max-width:520px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+    header{position:sticky;top:0;z-index:20;background:var(--bg);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+    header img.logo{width:40px;height:40px;border-radius:12px;object-fit:cover;box-shadow:var(--shadow)}
+    header .title{flex:1}
+    header .title h1{margin:0;font-size:18px;letter-spacing:.2px}
+    header .title small{color:var(--muted)}
+    /* TOP TABS */
+    .top-tabs{position:sticky;top:64px;z-index:15;background:var(--bg);padding:10px 12px 4px;border-bottom:1px solid var(--border);display:flex;justify-content:center;}
+    .seg{display:flex;gap:8px}
+    .seg button{padding:8px 14px;border-radius:18px;border:1.5px solid var(--border);background:#14151a;color:var(--muted);font-weight:600}
+    [data-theme="light"] .seg button{background:#f3f4f6}
+    .seg button.active{color:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.15) inset}
+    .content{flex:1;padding:16px}
+    .card{background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+    .row{display:flex;gap:12px}
+    .row>*{flex:1}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    input,select,textarea{width:100%;background:transparent;color:var(--text);border:1px solid var(--border);border-radius:14px;padding:12px;font-size:16px;outline:none}
+    input:disabled,select:disabled{opacity:.7}
+    .btn{appearance:none;border:none;border-radius:16px;padding:12px 16px;font-weight:600;cursor:pointer}
+    .btn.primary{background:var(--accent);color:#fff}
+    .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .btn.danger{background:var(--danger);color:#fff}
+    .btn.success{background:var(--success);color:#fff}
+    .btn.block{width:100%}
+    .section-title{font-weight:700;margin:0 0 8px 0;letter-spacing:.2px}
+    .kpi{display:flex;align-items:baseline;gap:8px}
+    .kpi .big{font-size:28px;font-weight:800}
+    .kpi .tag{font-size:12px;color:var(--muted)}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.05)}
+    [data-theme="light"] .pill{background:rgba(0,0,0,.05)}
+    .muted{color:var(--muted)}
+    .right{display:flex;justify-content:flex-end}
+    .divider{height:1px;background:var(--border);margin:12px 0}
+    .caption{font-size:12px;color:var(--muted)}
+    .center{display:flex;flex-direction:column;align-items:center;gap:10px}
+    .big-input{font-size:28px;padding:14px 16px;text-align:center;max-width:260px}
+    .date-sm{font-size:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+<div class="app" id="app" data-theme="dark">
+  <header>
+    <img class="logo" id="logo" alt="logo" src="apple-touch-icon.png"/>
+    <div class="title">
+      <h1>Control de Cambios</h1>
+      <small id="hdrMeta">Ruta — Mes/Año</small>
+    </div>
+    <button class="btn ghost" id="themeBtn" title="Cambiar tema">🌙</button>
+  </header>
+
+  <!-- TOP TABS -->
+  <div class="top-tabs">
+    <div class="seg">
+      <button data-tab="dashboard" class="active">Dashboard</button>
+      <button data-tab="cambios">Cambios</button>
+      <button data-tab="config">Configuración</button>
+    </div>
+  </div>
+
+  <main class="content">
+    <!-- DASHBOARD -->
+    <section id="tab-dashboard" class="tab">
+      <div class="card">
+        <div class="section-title">Presupuesto del mes</div>
+        <div class="kpi">
+          <div class="big" id="kpiPresupuesto">Q 0.00</div>
+          <div class="tag" id="kpiDetalle">asignado</div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+          <div class="card" style="flex:1">
+            <div class="section-title">Transferencias enviadas</div>
+            <div id="listEnviadas" class="list caption">Sin movimientos</div>
+          </div>
+          <div class="card" style="flex:1">
+            <div class="section-title">Reasignaciones recibidas</div>
+            <div id="listRecibidas" class="list caption">Sin movimientos</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAMBIOS -->
+    <section id="tab-cambios" class="tab" style="display:none">
+      <div class="card">
+        <div class="section-title">Registrar cambios</div>
+        <div class="center">
+          <div class="date-sm">Fecha</div>
+          <input type="date" id="chgFecha" style="max-width:220px">
+          <label>Monto</label>
+          <input type="number" id="chgMonto" min="0" step="0.01" placeholder="0.00" class="big-input" inputmode="decimal" enterkeyhint="done">
+        </div>
+        <div class="right" style="margin-top:12px">
+          <button class="btn primary" id="btnAddCambio">Agregar</button>
+        </div>
+        <div class="divider"></div>
+        <div class="section-title">Historial del mes</div>
+        <div id="listCambios" class="list caption">Sin registros</div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Transferir a otra ruta</div>
+        <div class="row">
+          <div>
+            <label>Ruta destino</label>
+            <select id="trfRuta"></select>
+          </div>
+          <div>
+            <label>Monto a transferir</label>
+            <input type="number" id="trfMonto" min="0" step="0.01" placeholder="0.00" inputmode="decimal" enterkeyhint="done">
+          </div>
+        </div>
+        <div class="right" style="margin-top:12px">
+          <button class="btn danger" id="btnTransferir">Enviar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Recibir reasignación</div>
+        <div class="row">
+          <div>
+            <label>Ruta origen</label>
+            <select id="rcvRuta"></select>
+          </div>
+          <div>
+            <label>Monto a recibir</label>
+            <input type="number" id="rcvMonto" min="0" step="0.01" placeholder="0.00" inputmode="decimal" enterkeyhint="done">
+          </div>
+        </div>
+        <div class="right" style="margin-top:12px">
+          <button class="btn success" id="btnRecibir">Recibir</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIGURACIÓN -->
+    <section id="tab-config" class="tab" style="display:none">
+      <div class="card">
+        <div class="section-title">Parámetros del mes</div>
+        <div class="row">
+          <div>
+            <label>Ruta</label>
+            <select id="cfgRuta"></select>
+          </div>
+          <div>
+            <label>Monto asignado (Q)</label>
+            <input type="number" id="cfgPresupuesto" min="0" step="0.01" placeholder="0.00" inputmode="decimal" enterkeyhint="next">
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label>Mes</label>
+            <select id="cfgMes"></select>
+          </div>
+          <div>
+            <label>Año</label>
+            <input type="number" id="cfgAnio" min="2024" max="2100" inputmode="numeric" pattern="[0-9]*" enterkeyhint="next">
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label>Días hábiles</label>
+            <input type="number" id="cfgHabiles" min="1" max="31" placeholder="27" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn primary" id="btnGuardar">Guardar</button>
+          <button class="btn ghost" id="btnReiniciar" title="Permite configurar un nuevo mes">Reiniciar mes</button>
+        </div>
+        <p class="caption" id="cfgHint">Una vez guardado, la configuración queda bloqueada para evitar cambios accidentales.</p>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Tema</div>
+        <div class="row">
+          <button class="btn ghost" data-theme-sel="light">Claro</button>
+          <button class="btn ghost" data-theme-sel="dark">Oscuro</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  const ROUTES = ["17029","17030","17031","17032","17033","17034","17035"];
+  const STORE_KEY = "cc_state_v1";
+  const THEME_KEY = "cc_theme";
+
+  const $ = (q) => document.querySelector(q);
+  const setText = (el, txt) => { if (el) el.textContent = txt; };
+  const setValue = (el, val) => { if (el) el.value = val; };
+
+  const app = $('#app');
+  const hdrMeta = $('#hdrMeta');
+  const kpiPresupuesto = $('#kpiPresupuesto');
+  const kpiDetalle = $('#kpiDetalle');
+  const listEnviadas = $('#listEnviadas');
+  const listRecibidas = $('#listRecibidas');
+  const listCambios = $('#listCambios');
+  const themeBtn = $('#themeBtn');
+
+  const cfgRuta = $('#cfgRuta');
+  const cfgPresupuesto = $('#cfgPresupuesto');
+  const cfgMes = $('#cfgMes');
+  const cfgAnio = $('#cfgAnio');
+  const cfgHabiles = $('#cfgHabiles');
+  const btnGuardar = $('#btnGuardar');
+  const btnReiniciar = $('#btnReiniciar');
+
+  const chgFecha = $('#chgFecha');
+  const chgMonto = $('#chgMonto');
+  const btnAddCambio = $('#btnAddCambio');
+
+  const trfRuta = $('#trfRuta');
+  const trfMonto = $('#trfMonto');
+  const btnTransferir = $('#btnTransferir');
+
+  const rcvRuta = $('#rcvRuta');
+  const rcvMonto = $('#rcvMonto');
+  const btnRecibir = $('#btnRecibir');
+
+  // TOP TABS behavior
+  document.querySelectorAll('.top-tabs .seg button').forEach((b) => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.top-tabs .seg button').forEach((x) => x.classList.remove('active'));
+      b.classList.add('active');
+      const t = b.getAttribute('data-tab');
+      document.querySelectorAll('.tab').forEach((sec) => (sec.style.display = 'none'));
+      const sec = document.getElementById('tab-' + t);
+      if (sec) sec.style.display = 'block';
+    });
+  });
+
+  // Theme
+  function applyTheme(t){ if(!app||!themeBtn) return; app.setAttribute('data-theme', t); localStorage.setItem(THEME_KEY, t); themeBtn.textContent = t==='dark'?'🌙':'☀️'; }
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+  applyTheme(savedTheme);
+  if(themeBtn){ themeBtn.addEventListener('click',()=> applyTheme(app.getAttribute('data-theme')==='light'?'dark':'light')); }
+  document.querySelectorAll('[data-theme-sel]').forEach(btn=>{
+    btn.addEventListener('click',()=> applyTheme(btn.getAttribute('data-theme-sel')));
+  });
+
+  // State
+  const blankState = () => ({
+    config: { ruta: ROUTES[0], presupuesto: 0, mes: new Date().getMonth() + 1, anio: new Date().getFullYear(), habiles: 27, locked: false },
+    movimientos: { cambios: [], enviadas: [], recibidas: [] },
+  });
+  let state = JSON.parse(localStorage.getItem(STORE_KEY) || 'null') || blankState();
+
+  function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); refresh(); }
+  function formatQ(v){ return 'Q ' + Number(v||0).toLocaleString('es-GT',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+  function ymStr(){ return String(state.config.mes).padStart(2,'0') + '/' + state.config.anio; }
+
+  function populateSelects(){
+    const opts = ROUTES.map(r=>`<option value="${r}">${r}</option>`).join('');
+    if (cfgRuta) { cfgRuta.innerHTML = opts; cfgRuta.value = state.config.ruta; }
+    if (trfRuta) { trfRuta.innerHTML = opts; }
+    if (rcvRuta) { rcvRuta.innerHTML = opts; }
+    const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    if (cfgMes) { cfgMes.innerHTML = meses.map((m,i)=>`<option value="${i+1}">${m}</option>`).join(''); cfgMes.value = state.config.mes; }
+  }
+
+  function lockConfig(locked){
+    state.config.locked = locked;
+    [cfgRuta,cfgPresupuesto,cfgMes,cfgAnio,cfgHabiles,btnGuardar].forEach(el=> el && (el.disabled = locked));
+    const hint = document.getElementById('cfgHint');
+    if (hint) hint.textContent = locked ? 'Configuración bloqueada. Usa “Reiniciar mes” para comenzar un nuevo periodo.' : 'Configura y guarda para bloquear los parámetros del mes.';
+  }
+
+  function refreshHeader(){ setText(hdrMeta, `Ruta ${state.config.ruta} — ${ymStr()}`); }
+
+  const sumEnviadas = (s)=> s.movimientos.enviadas.reduce((a,m)=>a+Number(m.monto),0);
+  const sumRecibidas = (s)=> s.movimientos.recibidas.reduce((a,m)=>a+Number(m.monto),0);
+  const sumCambios = (s)=> s.movimientos.cambios.reduce((a,c)=>a+Number((c.monto!=null?c.monto:c.cantidad)||0),0);
+  const computeActual = (s)=> Number(s.config.presupuesto||0) - sumEnviadas(s) + sumRecibidas(s) - sumCambios(s);
+
+  function refreshDashboard(){
+    const asignado = Number(state.config.presupuesto||0);
+    const enviado = sumEnviadas(state);
+    const recibido = sumRecibidas(state);
+    const gastado = sumCambios(state);
+    const actual = computeActual(state);
+    setText(kpiPresupuesto, formatQ(actual));
+    setText(kpiDetalle, `Asignado ${formatQ(asignado)}  ·  −${formatQ(enviado)}  +${formatQ(recibido)}  ·  −Cambios ${formatQ(gastado)}`);
+    if (listEnviadas) listEnviadas.innerHTML = state.movimientos.enviadas.length? state.movimientos.enviadas.map(m=>`<div class='pill'>→ ${m.ruta} <span class='muted'>${formatQ(m.monto)} · ${m.fecha}</span></div>`).join('') : 'Sin movimientos';
+    if (listRecibidas) listRecibidas.innerHTML = state.movimientos.recibidas.length? state.movimientos.recibidas.map(m=>`<div class='pill'>← ${m.ruta} <span class='muted'>${formatQ(m.monto)} · ${m.fecha}</span></div>`).join('') : 'Sin movimientos';
+  }
+
+  function refreshCambios(){
+    if (!listCambios) return;
+    if(state.movimientos.cambios.length===0){ listCambios.textContent='Sin registros'; return; }
+    listCambios.innerHTML = state.movimientos.cambios.slice().reverse().map(c=>{
+      const val = (c.monto!=null?c.monto:c.cantidad);
+      return `<div class='pill'>💵 ${formatQ(val)} <span class='muted'>${c.fecha}</span></div>`;
+    }).join('');
+  }
+
+  function setDefaultDate(){
+    if (!chgFecha) return;
+    const y = state.config.anio; const m = state.config.mes; const today = new Date();
+    const d = Math.min(today.getDate(), new Date(y,m,0).getDate());
+    chgFecha.value = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  }
+
+  function refresh(){
+    populateSelects();
+    setValue(cfgPresupuesto, state.config.presupuesto);
+    setValue(cfgAnio, state.config.anio);
+    setValue(cfgHabiles, state.config.habiles);
+    lockConfig(state.config.locked);
+    refreshHeader();
+    refreshDashboard();
+    refreshCambios();
+    setDefaultDate();
+  }
+
+  // Handlers
+  if (btnGuardar) btnGuardar.addEventListener('click',()=>{
+    if(!cfgPresupuesto?.value || !cfgAnio?.value || !cfgHabiles?.value){ alert('Completa ruta, presupuesto, mes/año y días hábiles.'); return; }
+    state.config.ruta = cfgRuta?.value || ROUTES[0];
+    state.config.presupuesto = Number(cfgPresupuesto.value);
+    state.config.mes = Number(cfgMes?.value || (new Date().getMonth()+1));
+    state.config.anio = Number(cfgAnio.value);
+    state.config.habiles = Number(cfgHabiles.value);
+    lockConfig(true);
+    save();
+  });
+
+  if (btnReiniciar) btnReiniciar.addEventListener('click',()=>{
+    if(confirm('¿Reiniciar el mes? Se borrarán cambios, transferencias y reasignaciones.')){
+      const theme = localStorage.getItem(THEME_KEY)||'dark';
+      state = blankState();
+      save();
+      applyTheme(theme);
+      lockConfig(false);
+    }
+  });
+
+  function applyTheme(t){ if(!app||!themeBtn) return; app.setAttribute('data-theme', t); localStorage.setItem(THEME_KEY, t); themeBtn.textContent = t==='dark'?'🌙':'☀️'; }
+
+  if (btnAddCambio) btnAddCambio.addEventListener('click',()=>{
+    if(!state.config.locked){ alert('Primero guarda la configuración del mes.'); return; }
+    const fecha = chgFecha?.value; const monto = Number(chgMonto?.value||0);
+    if(!fecha || monto<=0){ alert('Ingresa fecha y monto válido.'); return; }
+    state.movimientos.cambios.push({fecha, monto});
+    if (chgMonto) chgMonto.value = '';
+    save();
+  });
+
+  if (btnTransferir) btnTransferir.addEventListener('click',()=>{
+    if(!state.config.locked){ alert('Primero guarda la configuración del mes.'); return; }
+    const ruta = trfRuta?.value; const monto = Number(trfMonto?.value||0);
+    if(!ruta || monto<=0){ alert('Selecciona ruta destino y monto válido.'); return; }
+    const fecha = new Date().toISOString().slice(0,10);
+    state.movimientos.enviadas.push({ruta, monto, fecha});
+    if (trfMonto) trfMonto.value='';
+    save();
+  });
+
+  if (btnRecibir) btnRecibir.addEventListener('click',()=>{
+    if(!state.config.locked){ alert('Primero guarda la configuración del mes.'); return; }
+    const ruta = rcvRuta?.value; const monto = Number(rcvMonto?.value||0);
+    if(!ruta || monto<=0){ alert('Selecciona ruta origen y monto válido.'); return; }
+    const fecha = new Date().toISOString().slice(0,10);
+    state.movimientos.recibidas.push({ruta, monto, fecha});
+    if (rcvMonto) rcvMonto.value='';
+    save();
+  });
+
+  // Init
+  const sec = document.getElementById('tab-dashboard'); if (sec) sec.style.display='block';
+  refresh();
+
+  // Self-tests (console)
+  try{
+    const blank = () => ({config:{ruta:ROUTES[0],presupuesto:0,mes:1,anio:2025,habiles:27,locked:false},movimientos:{cambios:[],enviadas:[],recibidas:[]}});
+    const s1 = blank(); s1.config.presupuesto=1000; s1.movimientos.enviadas=[{ruta:'17030',monto:100,fecha:'x'}]; s1.movimientos.recibidas=[{ruta:'17035',monto:50,fecha:'x'}]; s1.movimientos.cambios=[{fecha:'x',monto:200}];
+    console.assert(Number(s1.config.presupuesto)-100+50-200===750,'Test1');
+    const s2 = blank(); console.assert(Number(s2.config.presupuesto)===0,'Test2');
+    const s3 = blank(); s3.config.presupuesto=500; s3.movimientos.enviadas=[{ruta:'17031',monto:50,fecha:'x'},{ruta:'17032',monto:50,fecha:'x'}]; s3.movimientos.recibidas=[{ruta:'17033',monto:25,fecha:'x'}]; s3.movimientos.cambios=[{fecha:'x',monto:10},{fecha:'x',monto:5}]; console.assert((500-100+25-15)===410,'Test3');
+    const s4 = blank(); s4.config.presupuesto=100; s4.movimientos.enviadas=[{ruta:'17029',monto:33.33,fecha:'x'}]; s4.movimientos.recibidas=[{ruta:'17030',monto:0.33,fecha:'x'}]; s4.movimientos.cambios=[{fecha:'x',monto:66}]; console.assert(Math.abs((100-33.33+0.33-66)-1.0)<1e-9,'Test4');
+    const s5 = blank(); s5.config.presupuesto=50; s5.movimientos.cambios=[{fecha:'x',cantidad:20}]; console.assert((50-20)===30,'Test5');
+    console.log('%cPruebas OK','color:green');
+  }catch(e){ console.error('Fallo en pruebas:', e); }
+});
+</script>
+</body>
+</html>
