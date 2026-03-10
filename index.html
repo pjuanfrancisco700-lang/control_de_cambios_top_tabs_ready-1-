@@ -15,98 +15,51 @@
   <link rel="icon" type="image/png" sizes="32x32" href="icons/app-32.png?v=1">
   <link rel="icon" type="image/png" sizes="16x16" href="icons/app-16.png?v=1">
   <style>
-    :root{--bg:#F2F2F7;--surface:#fff;--text:#0A0A0A;--muted:#6B7280;--brand:#2C6E7F;--ok:#34C759;--warn:#FFCC00;--danger:#FF3B30;--border:#E5E7EB;--shadow:0 6px 20px rgba(0,0,0,.06);--radius:16px}
-    *{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial;background:var(--bg);color:var(--text)}
+    :root{
+      --bg:#F2F2F7;--surface:#fff;--text:#0A0A0A;--muted:#6B7280;--brand:#2C6E7F;
+      --ok:#34C759;--warn:#FFCC00;--danger:#FF3B30;--border:#E5E7EB;
+      --shadow:0 6px 20px rgba(0,0,0,.06);--radius:16px
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial;background:var(--bg);color:var(--text)}
     .app{max-width:420px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
     .topbar{position:sticky;top:0;z-index:10;background:var(--bg);backdrop-filter:saturate(180%) blur(10px);display:flex;align-items:center;justify-content:center;padding:10px 12px;border-bottom:1px solid var(--border)}
-    .tabs{display:flex;gap:10px;justify-content:space-between;padding:2px 4px}
-    .tab{appearance:none;border:none;background:transparent;padding:6px 10px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--muted);font-weight:600;cursor:pointer;transition:all .18s ease}
+    .tabs{display:flex;gap:10px;justify-content:space-between;padding:2px 4px;width:100%}
+    .tab{appearance:none;border:none;background:transparent;padding:6px 10px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:.18s}
     .tab svg{width:22px;height:22px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
     .tab.active{background:var(--surface);color:var(--text);box-shadow:0 3px 10px rgba(0,0,0,.08);transform:translateY(-1px)}
     main{padding:12px;flex:1} section{display:none} section.active{display:block}
-    .card{min-height:110px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:8px;margin-bottom:4px}
-    .card h3{margin:0 0 8px 0;font-size:16px}
-    .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px;margin-bottom:12px}
+    .card h3{margin:0;font-size:16px}
+    .card-head,.subrow,.toolbar,.row{display:flex;gap:10px}.card-head,.subrow,.row{align-items:center;justify-content:space-between}
+    .row>*{flex:1}
     .pill{font-size:12px;color:var(--muted);border:1px solid var(--border);background:#F7F7FB;padding:4px 10px;border-radius:999px}
     .big{font-size:22px;font-weight:800;letter-spacing:.2px}
-    .subrow{display:flex;gap:16px;align-items:center;color:var(--muted);font-size:13px;margin-top:8px;justify-content:space-between}
-    .kpi-main-row{margin-top:10px;gap:24px}
-    .kpi-block{display:flex;flex-direction:column;align-items:flex-start;flex:1}
-    .kpi-label{font-size:12px;color:var(--muted);font-weight:500}
-    .kpi-value{font-size:16px;font-weight:800;color:var(--text);letter-spacing:.2px}
+    .muted{color:var(--muted);font-size:13px}.text-right{text-align:right}.mt-8{margin-top:8px}.mt-10{margin-top:10px}.hidden{display:none}.route-label{font-size:16px;color:var(--muted);font-weight:700}.route-value{color:#9CA3AF}.kpi-block-end{text-align:right;align-items:flex-end}.row-tight,.db-grid{gap:8px}.db-list-ul{margin:6px 0 0 16px}.db-grid{display:grid;margin-top:8px}
+    .subrow{margin-top:8px;align-items:flex-start}
+    .kpi-main-row{gap:24px}.kpi-block{display:flex;flex-direction:column;flex:1}
+    .kpi-label{font-size:12px;color:var(--muted)} .kpi-value{font-size:16px;font-weight:800}
     .progress{height:12px;border-radius:999px;background:#EEE;overflow:hidden;border:1px solid var(--border);margin-top:8px}
     .progress>div{height:100%;width:0%;transition:width .4s ease;border-radius:999px}
     label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
-    input,select{width:100%;padding:14px;border-radius:14px;border:1px solid var(--border);background:#FBFBFE;font-size:16px}
+    input,select{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:#FBFBFE;font-size:16px}
     input[type=number]{appearance:textfield}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font-weight:700;font-size:14px;cursor:pointer}
-    .btn.primary{
-      background:var(--brand);
-      border-color:transparent;
-      color:#fff;
-      transition:transform .15s ease, box-shadow .15s ease;
-    }
-    .btn.primary:active{
-      transform:scale(.97);
-      box-shadow:0 4px 12px rgba(44,110,127,0.45);
-    }
+    .ios-select{-webkit-appearance:none;appearance:none;border:1px solid var(--border);padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='8 10 12 14 16 10'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:18px}
+    .ios-select:focus{border-color:var(--brand);box-shadow:0 3px 10px rgba(44,110,127,.2);outline:none}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font-weight:700;font-size:14px;cursor:pointer}
+    .btn.primary{background:var(--brand);border-color:transparent;color:#fff}
+    .btn.primary:active{transform:scale(.97)}
     .btn.danger{background:var(--danger);color:#fff;border-color:transparent}
-    .btn.btn-theme{background:linear-gradient(135deg,#E6D8FF,#F3ECFF);border-color:transparent;color:#27115A;font-weight:700;box-shadow:0 4px 12px rgba(104,72,197,.25)}
-    .btn.btn-theme svg{width:16px;height:16px;stroke:#27115A;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
-    .btn.btn-theme span{font-size:13px}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .ventas-toolbar{position:sticky;bottom:0;padding-top:8px;padding-bottom:env(safe-area-inset-bottom,8px);background:linear-gradient(to top, rgba(242,242,247,0.98), rgba(242,242,247,0.85), transparent);z-index:5}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:8px;border-bottom:1px solid var(--border);font-size:12px;text-align:left}
-    th{color:var(--muted);font-weight:700}
+    .toolbar{flex-wrap:wrap;margin-top:10px}
+    .ventas-toolbar{position:sticky;bottom:0;padding-top:8px;padding-bottom:env(safe-area-inset-bottom,8px);background:linear-gradient(to top, rgba(242,242,247,.98), rgba(242,242,247,.85), transparent)}
+    .ventas-toolbar .btn.primary{width:100%}
+    table{width:100%;border-collapse:collapse} th,td{padding:8px;border-bottom:1px solid var(--border);font-size:12px;text-align:left} th{color:var(--muted);font-weight:700}
     .collapsible{border-top:1px dashed var(--border);margin-top:8px;padding-top:8px}
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:16px;z-index:30}
     .modal.active{display:flex}
     .modal-card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:14px}
-    @media (max-width:480px){.app{max-width:100%} main{padding:10px} .card{padding:12px;margin-bottom:12px} .tab span{display:none} .tabs{gap:6px} .big{font-size:24px}}
-    @media (max-width:360px){.btn{padding:8px 10px;font-size:13px} .big{font-size:22px}}
-    /* Estilos extra que quedaron de versiones anteriores, no rompen nada */
-    .card-ventas{padding-top:18px;padding-bottom:18px}
-    .ventas-fields{display:flex;flex-direction:column;gap:12px}
-    .ventas-fields .field select,.ventas-fields .field input{padding:14px;border-radius:14px;font-size:16px}
-    .ventas-toolbar{margin-top:14px}
-    .ventas-toolbar .btn.primary{width:100%;justify-content:center;font-size:16px;padding:12px 14px}
-    .ios-select{
-      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial;
-      -webkit-appearance:none;
-      appearance:none;
-      border-radius:10px;
-      border:2px solid #B6C0CC;
-      background:linear-gradient(135deg,#F9FAFB,#F3F4F6);
-      padding:16px 46px 16px 16px;
-      font-size:17px;
-      font-weight:700;
-      font-weight:600;
-      color:#111827;
-      outline:none;
-      box-shadow:0 1px 3px rgba(15,23,42,0.08);
-      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='8 10 12 14 16 10'/%3E%3C/svg%3E");
-      background-repeat:no-repeat;
-      background-position:right 12px center;
-      background-size:18px;
-    }
-    .ios-select:focus{
-      border-color:#2C6E7F;
-      box-shadow:0 3px 10px rgba(44,110,127,0.35);
-      background:linear-gradient(135deg,#FFFFFF,#F5FDF4);
-    }
-    .card-compact{min-height:110px;padding:10px 12px !important}
-    .card-compact .big{font-size:22px}
-    .card-compact .subrow{margin-top:4px}
-    .theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-    .theme-option{border-radius:12px;border:1px solid var(--border);padding:8px 10px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:#FBFBFE;font-size:12px;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease}
-    .theme-option:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
-    .theme-option.active{border-color:var(--brand);box-shadow:0 0 0 1px rgba(44,110,127,0.25)}
-    .theme-title{font-size:13px;font-weight:700}
-    .theme-sub{font-size:11px;color:var(--muted)}
-    .theme-dots{display:flex;gap:4px;margin-top:4px}
-    .theme-dot{width:12px;height:12px;border-radius:999px;border:1px solid rgba(0,0,0,.08)}
+    @media (max-width:480px){.app{max-width:100%}main{padding:10px}.tab span{display:none}.tabs{gap:6px}.big{font-size:24px}}
+    @media (max-width:360px){.btn{padding:8px 10px;font-size:13px}.big{font-size:22px}}
   </style>
 </head>
 <body>
@@ -114,38 +67,16 @@
     <header class="topbar">
       <nav class="tabs" role="tablist" aria-label="Barra de menú">
         <button class="tab active" data-tab="dashboard" aria-selected="true" title="Dashboard">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="4 16 9 11 13 14 20 7"/>
-            <polyline points="4 20 20 20"/>
-          </svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="4 16 9 11 13 14 20 7"/><polyline points="4 20 20 20"/></svg>
         </button>
         <button class="tab" data-tab="ventas" title="Registro de ventas">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 6h2l1 9h10l1-6H8"/>
-            <circle cx="10" cy="18" r="2"/>
-            <circle cx="17" cy="18" r="2"/>
-          </svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h2l1 9h10l1-6H8"/><circle cx="10" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
         </button>
         <button class="tab" data-tab="clientes" title="Cliente nuevo">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <!-- Icono de cliente -->
-            <circle cx="12" cy="7" r="3.2"/>
-            <path d="M5.2 19a6.8 6.8 0 0 1 13.6 0"/>
-            <!-- Símbolo + más separado y más arriba -->
-            <line x1="20" y1="7.8" x2="20" y2="13.2"/>
-            <line x1="17.4" y1="10.5" x2="22.6" y2="10.5"/>
-          </svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="3.2"/><path d="M5.2 19a6.8 6.8 0 0 1 13.6 0"/><line x1="20" y1="7.8" x2="20" y2="13.2"/><line x1="17.4" y1="10.5" x2="22.6" y2="10.5"/></svg>
         </button>
         <button class="tab" data-tab="config" title="Configuración">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <!-- Nuevo símbolo de configuración (estilo sliders / ajustes) -->
-            <line x1="6" y1="5" x2="18" y2="5"/>
-            <circle cx="14" cy="5" r="2"/>
-            <line x1="6" y1="12" x2="18" y2="12"/>
-            <circle cx="10" cy="12" r="2"/>
-            <line x1="6" y1="19" x2="18" y2="19"/>
-            <circle cx="16" cy="19" r="2"/>
-          </svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="5" x2="18" y2="5"/><circle cx="14" cy="5" r="2"/><line x1="6" y1="12" x2="18" y2="12"/><circle cx="10" cy="12" r="2"/><line x1="6" y1="19" x2="18" y2="19"/><circle cx="16" cy="19" r="2"/></svg>
         </button>
       </nav>
     </header>
@@ -155,56 +86,40 @@
         <div class="card">
           <div class="card-head">
             <h3>Presupuesto General</h3>
-            <span style="font-size:16px;color:var(--muted);font-weight:700">Ruta <span id="dash-ruta" style="color:#9CA3AF"></span></span>
+            <span class="route-label">Ruta <span id="dash-ruta" class="route-value"></span></span>
           </div>
           <div class="big" id="kpi-presupuesto">Q0.00</div>
-          <div class="progress"><div id="progress-bar" style="width:0%"></div></div>
+          <div class="progress"><div id="progress-bar"></div></div>
           <div class="subrow kpi-main-row">
-            <div class="kpi-block">
-              <span class="kpi-label">Total vendido</span>
-              <span class="kpi-value" id="kpi-vendido">Q0.00</span>
-            </div>
-            <div class="kpi-block" style="text-align:right;align-items:flex-end">
-              <span class="kpi-label">Faltante</span>
-              <span class="kpi-value" id="kpi-falta">Q0.00</span>
-            </div>
+            <div class="kpi-block"><span class="kpi-label">Total vendido</span><span class="kpi-value" id="kpi-vendido">Q0.00</span></div>
+            <div class="kpi-block kpi-block-end"><span class="kpi-label">Faltante</span><span class="kpi-value" id="kpi-falta">Q0.00</span></div>
           </div>
         </div>
-        <div class="card card-compact">
+
+        <div class="card">
           <div class="card-head"><h3>Indicadores Generales</h3></div>
           <div class="subrow">
-            <div>
-              <div class="muted">Avance general</div>
-              <div class="big" id="kpi-global-avance">0.0%</div>
-            </div>
-            <div style="text-align:right">
-              <div class="muted">Proyección cierre</div>
-              <div class="big" id="kpi-global-proy">Q0.00</div>
-            </div>
+            <div><div class="muted">Avance general</div><div class="big" id="kpi-global-avance">0.0%</div></div>
+            <div class="text-right"><div class="muted">Proyección cierre</div><div class="big" id="kpi-global-proy">Q0.00</div></div>
           </div>
           <div class="muted" id="coach-msg">Aún lejos, impulsa ventas</div>
         </div>
+
         <div class="card">
-          <div class="card-head">
-            <h3>Ventas con Congelador</h3>
-            <span class="pill"><span id="kpi-vcc-clientes">0</span> clientes</span>
-          </div>
+          <div class="card-head"><h3>Ventas con Congelador</h3><span class="pill"><span id="kpi-vcc-clientes">0</span> clientes</span></div>
           <div class="big" id="kpi-vcc">Q0.00</div>
           <div class="muted">Avance vs <span id="kpi-vcc-presupuesto-label">Q0.00</span>: <strong id="kpi-vcc-avance">0%</strong></div>
           <div class="muted">Proyección cierre: <strong id="kpi-vcc-proy">Q0.00</strong></div>
         </div>
+
         <div class="card">
-          <div class="card-head">
-            <h3>Ventas sin Congelador</h3>
-            <span class="pill"><span id="kpi-vsc-clientes">0</span> clientes</span>
-          </div>
+          <div class="card-head"><h3>Ventas sin Congelador</h3><span class="pill"><span id="kpi-vsc-clientes">0</span> clientes</span></div>
           <div class="big" id="kpi-vsc">Q0.00</div>
           <div class="muted">Avance vs <span id="kpi-vsc-meta-label">Q0.00</span>: <strong id="kpi-vsc-avance">0%</strong></div>
           <div class="muted">Proyección cierre: <strong id="kpi-vsc-proy">Q0.00</strong></div>
         </div>
       </section>
 
-      <!-- VENTAS unificadas -->
       <section id="ventas" role="tabpanel">
         <div class="card">
           <div class="card-head"><h3>Registrar venta</h3></div>
@@ -218,27 +133,22 @@
             </div>
             <div>
               <label>Cliente</label>
-              <input id="cliente-buscar" style="display:none;"/>
               <select id="venta-cliente" class="ios-select"></select>
             </div>
           </div>
-          <div class="row" style="margin-top:8px">
+          <div class="row mt-8">
             <div>
               <label>Monto (Q)</label>
-              <input id="venta-monto" type="number" inputmode="decimal" placeholder="0.00"/>
+              <input id="venta-monto" type="number" inputmode="decimal" placeholder="0.00" />
             </div>
           </div>
-          <div class="toolbar ventas-toolbar">
-            <button class="btn primary" id="add-venta">Agregar venta</button>
-          </div>
+          <div class="toolbar ventas-toolbar"><button class="btn primary" id="add-venta">Agregar venta</button></div>
         </div>
 
         <div class="card">
           <div class="card-head"><h3>Historial de ventas</h3></div>
           <table id="tabla-ventas">
-            <thead>
-              <tr><th>Fecha</th><th>Tipo</th><th>Cliente</th><th>Monto</th><th>Acciones</th></tr>
-            </thead>
+            <thead><tr><th>Fecha</th><th>Tipo</th><th>Cliente</th><th>Monto</th><th>Acciones</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -250,7 +160,7 @@
           <div class="row">
             <div>
               <label>Nombre del negocio</label>
-              <input id="cliente-nombre" placeholder="Ej. Tienda Emanuel"/>
+              <input id="cliente-nombre" placeholder="Ej. Tienda Emanuel" />
             </div>
             <div>
               <label>Tipo</label>
@@ -260,12 +170,10 @@
               </select>
             </div>
           </div>
-          <div class="toolbar" style="justify-content:space-between">
-            <button class="btn primary" id="btn-add-cliente">Agregar cliente</button>
-          </div>
+          <div class="toolbar"><button class="btn primary" id="btn-add-cliente">Agregar cliente</button></div>
           <div class="collapsible">
             <button class="btn" id="toggle-db">Mostrar/Ocultar base de datos</button>
-            <div id="db-list" style="display:none;margin-top:8px"></div>
+            <div id="db-list" class="hidden mt-8"></div>
           </div>
         </div>
       </section>
@@ -276,42 +184,23 @@
           <div class="row">
             <div>
               <label>Mes / Año</label>
-              <div style="display:flex;gap:8px">
-                <select id="cfg-mes" class="ios-select" style="flex:1"></select>
-                <select id="cfg-anio" class="ios-select" style="flex:1"></select>
+              <div class="row row-tight">
+                <select id="cfg-mes" class="ios-select"></select>
+                <select id="cfg-anio" class="ios-select"></select>
               </div>
             </div>
           </div>
-          <div class="row" style="margin-top:10px">
-            <div>
-              <label>Ruta</label>
-              <input id="cfg-ruta" placeholder="17029"/>
-            </div>
-            <div>
-              <label>Días hábiles</label>
-              <input id="cfg-dias" type="number" value="26"/>
-            </div>
+          <div class="row mt-10">
+            <div><label>Ruta</label><input id="cfg-ruta" placeholder="17029" /></div>
+            <div><label>Días hábiles</label><input id="cfg-dias" type="number" value="26" /></div>
           </div>
-          <div class="row" style="margin-top:10px">
-            <div>
-              <label>Presupuesto general (Q)</label>
-              <input id="cfg-presupuesto" type="number" inputmode="decimal" placeholder="0.00"/>
-            </div>
-            <div>
-              <label>Ventas sin congelador (Q)</label>
-              <input id="cfg-vsc" type="number" value="400" inputmode="decimal"/>
-            </div>
+          <div class="row mt-10">
+            <div><label>Presupuesto general (Q)</label><input id="cfg-presupuesto" type="number" inputmode="decimal" placeholder="0.00" /></div>
+            <div><label>Ventas sin congelador (Q)</label><input id="cfg-vsc" type="number" value="400" inputmode="decimal" /></div>
           </div>
           <div class="toolbar">
             <button class="btn primary" id="btn-guardar">GUARDAR</button>
             <button class="btn danger" id="btn-reset">REINICIAR</button>
-            <button class="btn btn-theme" id="btn-themes" style="margin-left:auto" aria-label="Temas de la app">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 19l3.5-0.5L18 9l-3-3L5.5 15.5 5 19z"/>
-                <path d="M14 6l3 3"/>
-              </svg>
-              <span>Temas</span>
-            </button>
           </div>
         </div>
       </section>
@@ -321,354 +210,123 @@
   <div class="modal" id="modal-edit">
     <div class="modal-card">
       <h3>Editar venta</h3>
-      <div class="row" style="margin-top:8px">
-        <div>
-          <label>Monto (Q)</label>
-          <input id="edit-monto" type="number" inputmode="decimal" />
-        </div>
-        <div>
-          <label>Fecha</label>
-          <input id="edit-fecha" type="date" />
-        </div>
+      <div class="row mt-8">
+        <div><label>Monto (Q)</label><input id="edit-monto" type="number" inputmode="decimal" /></div>
+        <div><label>Fecha</label><input id="edit-fecha" type="date" /></div>
       </div>
-      <div class="toolbar">
-        <button class="btn" id="edit-cancel">Cancelar</button>
-        <button class="btn primary" id="edit-save">Guardar cambios</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="modal-themes">
-    <div class="modal-card">
-      <h3>Temas de la app</h3>
-      <p style="font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:10px">Elige el estilo visual que prefieras. Se aplicará en todas las ventanas.</p>
-      <div class="theme-grid">
-        <button class="theme-option" data-theme="original" type="button">
-          <span class="theme-title">Minimal Claro</span>
-          <span class="theme-sub">Tema original</span>
-          <div class="theme-dots">
-            <span class="theme-dot" style="background:#F2F2F7"></span>
-            <span class="theme-dot" style="background:#FFFFFF"></span>
-            <span class="theme-dot" style="background:#2C6E7F"></span>
-          </div>
-        </button>
-        <button class="theme-option" data-theme="rosa" type="button">
-          <span class="theme-title">Rosa Porcelana</span>
-          <span class="theme-sub">Femenino suave</span>
-          <div class="theme-dots">
-            <span class="theme-dot" style="background:#FDF7FB"></span>
-            <span class="theme-dot" style="background:#FFFFFF"></span>
-            <span class="theme-dot" style="background:#E8A6C9"></span>
-          </div>
-        </button>
-        <button class="theme-option" data-theme="lavanda" type="button">
-          <span class="theme-title">Lavanda Pro</span>
-          <span class="theme-sub">Suave y premium</span>
-          <div class="theme-dots">
-            <span class="theme-dot" style="background:#F7F4FF"></span>
-            <span class="theme-dot" style="background:#FFFFFF"></span>
-            <span class="theme-dot" style="background:#A78BFA"></span>
-          </div>
-        </button>
-        <button class="theme-option" data-theme="azul" type="button">
-          <span class="theme-title">Azul Ejecutivo</span>
-          <span class="theme-sub">Corporativo</span>
-          <div class="theme-dots">
-            <span class="theme-dot" style="background:#EEF3F8"></span>
-            <span class="theme-dot" style="background:#FFFFFF"></span>
-            <span class="theme-dot" style="background:#3B82F6"></span>
-          </div>
-        </button>
-        <button class="theme-option" data-theme="verde" type="button">
-          <span class="theme-title">Verde Sage</span>
-          <span class="theme-sub">Calm & focus</span>
-          <div class="theme-dots">
-            <span class="theme-dot" style="background:#F5F8F6"></span>
-            <span class="theme-dot" style="background:#FFFFFF"></span>
-            <span class="theme-dot" style="background:#6AA785"></span>
-          </div>
-        </button>
-      </div>
-      <div class="toolbar" style="margin-top:12px;justify-content:flex-end">
-        <button class="btn" id="themes-close">Cerrar</button>
-      </div>
+      <div class="toolbar"><button class="btn" id="edit-cancel">Cancelar</button><button class="btn primary" id="edit-save">Guardar cambios</button></div>
     </div>
   </div>
 
   <script>
-    // Registrar Service Worker (opcional, no rompe la app si falla)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
     }
 
-    const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
+    const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
     const todayStr = () => new Date().toISOString().slice(0, 10);
-    const Q = n => new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ', minimumFractionDigits: 2 }).format(n || 0);
+    const Q = n => new Intl.NumberFormat('es-GT', { style:'currency', currency:'GTQ', minimumFractionDigits:2 }).format(n || 0);
+    const uid = () => crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(16).slice(2);
+    const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+    const load = k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
+    const setText = (sel, val) => { const el = $(sel); if (el) el.textContent = val; };
+    const sum = arr => arr.reduce((a, b) => a + (+b.monto || 0), 0);
+    const escapeHtml = s => (s + '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
 
     const KEY_CFG = 's360_cfg', KEY_CLIENTS = 's360_clients', KEY_SALES = 's360_sales';
-    const KEY_THEME = 's360_theme';
-
-    const THEMES = {
-      original: { bg:'#F2F2F7', surface:'#FFFFFF', text:'#0A0A0A', brand:'#2C6E7F' },
-      rosa:     { bg:'#FDF7FB', surface:'#FFFFFF', text:'#3D2E40', brand:'#E8A6C9' },
-      lavanda:  { bg:'#F7F4FF', surface:'#FFFFFF', text:'#2A2448', brand:'#A78BFA' },
-      azul:     { bg:'#EEF3F8', surface:'#FFFFFF', text:'#0A1A2A', brand:'#3B82F6' },
-      verde:    { bg:'#F5F8F6', surface:'#FFFFFF', text:'#21322D', brand:'#6AA785' }
-    };
-
-    function applyTheme(name) {
-      const t = THEMES[name] || THEMES.original;
-      const root = document.documentElement;
-      root.style.setProperty('--bg', t.bg);
-      root.style.setProperty('--surface', t.surface);
-      root.style.setProperty('--text', t.text);
-      root.style.setProperty('--brand', t.brand);
-      try { localStorage.setItem(KEY_THEME, name); } catch(e) {}
-    }
-
-    function initThemesUI(currentName) {
-      const options = $$('.theme-option');
-      options.forEach(btn => {
-        const name = btn.dataset.theme;
-        if (!name) return;
-        btn.classList.toggle('active', name === currentName);
-        btn.onclick = () => {
-          applyTheme(name);
-          options.forEach(o => o.classList.toggle('active', o === btn));
-        };
-      });
-    }
-    const uid = () => (self.crypto && crypto.randomUUID ? crypto.randomUUID() : ('id-' + Date.now() + '-' + Math.random().toString(16).slice(2)));
-
+    const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const emptyRoute = () => ({ congelador: [], sin: [] });
     const DEFAULT_DB = {
-      "17029": {
-        "congelador": [
-          "Caseta Azul (Ixcanal)",
-          "Super 24 Sanarate Centro",
-          "Tienda Norma (Ixcanal)",
-          "Tienda Mónica",
-          "Tienda Helados Flor",
-          "Tienda y Librería Compu Game",
-          "Tienda Marissa 2",
-          "Tienda Magaly",
-          "Tienda Marissa",
-          "Super 24 Minerva",
-          "Super 24 El Rancho",
-          "Librería AMC"
-        ],
-        "sin": [
-          "Variedades Génesis",
-          "Comedor Mary",
-          "Tienda Yanira",
-          "H&S;",
-          "Tienda Escobar",
-          "Tienda San José",
-          "Tienda Sanic"
-        ]
-      },
-      "17030": {
-        "congelador": ["Super 24 Conacaston Sanarate", "super 24 El Rancho 3"],
-        "sin": ["Internet Velasquez", "Tienda Kleidy", "Negocios Estrada", "CR GYM"]
-      },
-      "17031": { "congelador": [], "sin": [] },
-      "17032": { "congelador": [], "sin": [] },
-      "17033": { "congelador": [], "sin": [] },
-      "17034": { "congelador": [], "sin": [] },
-      "17035": { "congelador": [], "sin": [] }
+      17029: { congelador: ['Caseta Azul (Ixcanal)','Super 24 Sanarate Centro','Tienda Norma (Ixcanal)','Tienda Mónica','Tienda Helados Flor','Tienda y Librería Compu Game','Tienda Marissa 2','Tienda Magaly','Tienda Marissa','Super 24 Minerva','Super 24 El Rancho','Librería AMC'], sin: ['Variedades Génesis','Comedor Mary','Tienda Yanira','H&S;','Tienda Escobar','Tienda San José','Tienda Sanic'] },
+      17030: { congelador: ['Super 24 Conacaston Sanarate','super 24 El Rancho 3'], sin: ['Internet Velasquez','Tienda Kleidy','Negocios Estrada','CR GYM'] },
+      17031: emptyRoute(), 17032: emptyRoute(), 17033: emptyRoute(), 17034: emptyRoute(), 17035: emptyRoute()
     };
 
-    function save(k, v) {
-      localStorage.setItem(k, JSON.stringify(v));
-    }
-
-    function load(k) {
-      try {
-        return JSON.parse(localStorage.getItem(k));
-      } catch {
-        return null;
-      }
-    }
-
-    let cfg = load(KEY_CFG) || ((d) => ({
-      mes: d.getMonth() + 1,
-      anio: d.getFullYear(),
-      ruta: '17029',
-      dias: 26,
-      presupuesto: 0,
-      vscMeta: 400,
-      syncUrl: '',
-      token: ''
-    }))(new Date());
-
+    let cfg = load(KEY_CFG) || ((d) => ({ mes:d.getMonth()+1, anio:d.getFullYear(), ruta:'17029', dias:26, presupuesto:0, vscMeta:400, syncUrl:'', token:'' }))(new Date());
     let db = load(KEY_CLIENTS) || DEFAULT_DB;
     let sales = load(KEY_SALES) || [];
+    let editingId = null;
 
-    const initialTheme = (typeof localStorage !== 'undefined' && localStorage.getItem(KEY_THEME)) || 'original';
-    applyTheme(initialTheme);
+    const currentSales = () => sales.filter(v => v.ruta === cfg.ruta && v.mes === cfg.mes && v.anio === cfg.anio).sort((a, b) => b.fecha.localeCompare(a.fecha));
+    const routeData = () => db[cfg.ruta] || emptyRoute();
+    const closeModal = () => $('#modal-edit').classList.remove('active');
 
     function initTabs() {
-      $$('.tab').forEach(btn => {
-        btn.onclick = () => {
-          $$('.tab').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const id = btn.dataset.tab;
-          $$('main section').forEach(s => s.classList.remove('active'));
-          const sec = document.getElementById(id);
-          if (sec) sec.classList.add('active');
-          if (id === 'ventas') buildClientSelects();
-          if (id === 'clientes') renderDBList();
-        };
+      $$('.tab').forEach(btn => btn.onclick = () => {
+        $$('.tab,main section').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+        $('#' + btn.dataset.tab)?.classList.add('active');
+        if (btn.dataset.tab !== 'dashboard') renderAll();
       });
     }
 
-    function initConfigSelectors() {
-      const m = $('#cfg-mes'), a = $('#cfg-anio');
-      const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-      if (m) m.innerHTML = meses.map((n, i) => `<option value="${i + 1}">${n}</option>`).join('');
-      if (a) a.innerHTML = Array.from({ length: 6 }, (_, k) => cfg.anio - 1 + k).map(y => `<option value="${y}">${y}</option>`).join('');
-      if (m) m.value = cfg.mes;
-      if (a) a.value = cfg.anio;
-      if ($('#cfg-ruta')) $('#cfg-ruta').value = cfg.ruta;
-      if ($('#cfg-dias')) $('#cfg-dias').value = cfg.dias;
-      if ($('#cfg-presupuesto')) $('#cfg-presupuesto').value = cfg.presupuesto;
-      if ($('#cfg-vsc')) $('#cfg-vsc').value = cfg.vscMeta;
+    function initConfig() {
+      $('#cfg-mes').innerHTML = meses.map((n, i) => `<option value="${i + 1}">${n}</option>`).join('');
+      $('#cfg-anio').innerHTML = Array.from({ length:6 }, (_, k) => cfg.anio - 1 + k).map(y => `<option value="${y}">${y}</option>`).join('');
+      ['mes','anio','ruta','dias','presupuesto'].forEach(() => {});
+      $('#cfg-mes').value = cfg.mes; $('#cfg-anio').value = cfg.anio; $('#cfg-ruta').value = cfg.ruta;
+      $('#cfg-dias').value = cfg.dias; $('#cfg-presupuesto').value = cfg.presupuesto; $('#cfg-vsc').value = cfg.vscMeta;
 
-      if ($('#btn-guardar')) $('#btn-guardar').onclick = () => {
-        cfg.mes = +m.value;
-        cfg.anio = +a.value;
-        cfg.ruta = $('#cfg-ruta').value.trim() || cfg.ruta;
-        cfg.dias = Math.max(1, +$('#cfg-dias').value || 26);
-        cfg.presupuesto = Math.max(0, +$('#cfg-presupuesto').value || 0);
-        const vscEl = $('#cfg-vsc');
-        cfg.vscMeta = vscEl ? Math.max(0, +vscEl.value || 0) : cfg.vscMeta;
+      $('#btn-guardar').onclick = () => {
+        cfg = {
+          ...cfg,
+          mes:+$('#cfg-mes').value,
+          anio:+$('#cfg-anio').value,
+          ruta:$('#cfg-ruta').value.trim() || cfg.ruta,
+          dias:Math.max(1, +$('#cfg-dias').value || 26),
+          presupuesto:Math.max(0, +$('#cfg-presupuesto').value || 0),
+          vscMeta:Math.max(0, +$('#cfg-vsc').value || 0)
+        };
         save(KEY_CFG, cfg);
         renderAll();
         alert('Configuración guardada');
       };
 
-      if ($('#btn-reset')) $('#btn-reset').onclick = () => {
-        if (confirm('Esto borrará todas las ventas del mes actual. ¿Continuar?')) {
-          sales = sales.filter(v => !(v.ruta === cfg.ruta && v.anio === cfg.anio && v.mes === cfg.mes));
-          save(KEY_SALES, sales);
-          renderAll();
-          alert('Mes reiniciado.');
-        }
+      $('#btn-reset').onclick = () => {
+        if (!confirm('Esto borrará todas las ventas del mes actual. ¿Continuar?')) return;
+        sales = sales.filter(v => !(v.ruta === cfg.ruta && v.anio === cfg.anio && v.mes === cfg.mes));
+        save(KEY_SALES, sales);
+        renderAll();
+        alert('Mes reiniciado.');
       };
     }
 
-    // Construye el select de clientes según el tipo elegido y el filtro de búsqueda
     function buildClientSelects() {
-      const route = db[cfg.ruta] || { congelador: [], sin: [] };
-      const tipoEl = $('#venta-tipo');
-      const cliEl = $('#venta-cliente');
-      const searchEl = $('#cliente-buscar');
-      if (!tipoEl || !cliEl) return;
-      const tipo = tipoEl.value || 'congelador';
-      const baseList = tipo === 'congelador' ? route.congelador : route.sin;
-      const filtro = (searchEl?.value || '').toLowerCase();
-      const list = baseList.filter(x => x.toLowerCase().includes(filtro));
-      cliEl.innerHTML = list.map(n => `<option>${n}</option>`).join('');
+      const list = ($('#venta-tipo').value === 'congelador' ? routeData().congelador : routeData().sin)
+        .map(n => `<option>${n}</option>`).join('');
+      $('#venta-cliente').innerHTML = list;
     }
 
-    // Listener para búsqueda de cliente
-    document.addEventListener('input', e => {
-      if (e.target && e.target.id === 'cliente-buscar') buildClientSelects();
-    });
-
-    // Cambio de tipo actualiza el listado de clientes
-    if ($('#venta-tipo')) $('#venta-tipo').addEventListener('change', buildClientSelects);
-
-    // Botón único para agregar venta
-    if ($('#add-venta')) $('#add-venta').onclick = () => addVenta(
-      $('#venta-tipo').value,
-      $('#venta-cliente').value,
-      +$('#venta-monto').value || 0
-    );
-
-    async function addVenta(tipo, cliente, monto) {
-      if (!cliente) {
-        alert('Selecciona un cliente.');
-        return;
-      }
-      if (!(monto > 0)) {
-        alert('Ingresa un monto válido.');
-        return;
-      }
-      const v = {
-        id: uid(),
-        fecha: todayStr(),
-        tipo,
-        cliente,
-        monto: +monto,
-        ruta: cfg.ruta,
-        mes: cfg.mes,
-        anio: cfg.anio
-      };
-      sales.push(v);
-      save(KEY_SALES, sales);
-      if ($('#venta-monto')) $('#venta-monto').value = '';
-      renderAll();
-      if (cfg.syncUrl) {
-        try {
-          await fetch(cfg.syncUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              id: v.id,
-              fecha: v.fecha,
-              tipo: v.tipo,
-              cliente: v.cliente,
-              monto: v.monto,
-              ruta: v.ruta,
-              mes: v.mes,
-              anio: v.anio,
-              token: cfg.token || ''
-            })
-          });
-        } catch (e) {
-          // fallo silencioso de sync
-        }
-      }
-    }
-
-    function renderVentasTable() {
-      const tbody = $('#tabla-ventas tbody');
-      if (!tbody) return;
-      const list = currentSales();
-      tbody.innerHTML = list.map(v => `
-        <tr>
-          <td>${v.fecha}</td>
-          <td>${v.tipo === 'congelador' ? 'Con congelador' : 'Sin congelador'}</td>
-          <td>${escapeHtml(v.cliente)}</td>
-          <td>${Q(v.monto)}</td>
-          <td>
-            <button class='btn' data-edit='${v.id}'>Editar</button>
-            <button class='btn danger' data-del='${v.id}'>Borrar</button>
-          </td>
-        </tr>`
-      ).join('');
-      tbody.querySelectorAll('button[data-edit]').forEach(b => b.onclick = () => openEdit(b.dataset.edit));
-      tbody.querySelectorAll('button[data-del]').forEach(b => b.onclick = () => delVenta(b.dataset.del));
+    async function addVenta() {
+      const tipo = $('#venta-tipo').value, cliente = $('#venta-cliente').value, monto = +$('#venta-monto').value || 0;
+      if (!cliente) return alert('Selecciona un cliente.');
+      if (!(monto > 0)) return alert('Ingresa un monto válido.');
+      const v = { id:uid(), fecha:todayStr(), tipo, cliente, monto, ruta:cfg.ruta, mes:cfg.mes, anio:cfg.anio };
+      sales.push(v); save(KEY_SALES, sales); $('#venta-monto').value = ''; renderAll();
+      if (!cfg.syncUrl) return;
+      try {
+        await fetch(cfg.syncUrl, { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify({ ...v, token:cfg.token || '' }) });
+      } catch {}
     }
 
     function openEdit(id) {
       const v = sales.find(x => x.id === id);
       if (!v) return;
-      const m = document.getElementById('modal-edit');
-      m.classList.add('active');
-      document.getElementById('edit-monto').value = v.monto;
-      document.getElementById('edit-fecha').value = v.fecha;
-      document.getElementById('edit-save').onclick = () => {
-        const nuevo = +document.getElementById('edit-monto').value || 0;
-        if (!(nuevo > 0)) return alert('Monto inválido');
-        const f = document.getElementById('edit-fecha').value || todayStr();
-        v.monto = nuevo;
-        v.fecha = f;
-        save(KEY_SALES, sales);
-        m.classList.remove('active');
-        renderAll();
-      };
-      document.getElementById('edit-cancel').onclick = () => m.classList.remove('active');
+      editingId = id;
+      $('#edit-monto').value = v.monto;
+      $('#edit-fecha').value = v.fecha;
+      $('#modal-edit').classList.add('active');
+    }
+
+    function saveEdit() {
+      const v = sales.find(x => x.id === editingId);
+      const nuevo = +$('#edit-monto').value || 0;
+      if (!v || !(nuevo > 0)) return alert('Monto inválido');
+      v.monto = nuevo;
+      v.fecha = $('#edit-fecha').value || todayStr();
+      save(KEY_SALES, sales);
+      closeModal();
+      renderAll();
     }
 
     function delVenta(id) {
@@ -678,148 +336,80 @@
       renderAll();
     }
 
-    function currentSales() {
-      return sales
-        .filter(v => v.ruta === cfg.ruta && v.mes === cfg.mes && v.anio === cfg.anio)
-        .sort((a, b) => b.fecha.localeCompare(a.fecha));
+    function addCliente() {
+      const nombre = $('#cliente-nombre').value.trim(), tipo = $('#cliente-tipo').value;
+      if (!nombre) return alert('Escribe el nombre del negocio');
+      db[cfg.ruta] ||= emptyRoute();
+      db[cfg.ruta][tipo === 'congelador' ? 'congelador' : 'sin'].push(nombre);
+      save(KEY_CLIENTS, db);
+      $('#cliente-nombre').value = '';
+      renderAll();
+      alert('Cliente agregado a la ruta ' + cfg.ruta);
     }
 
-    if (document.getElementById('btn-add-cliente')) {
-      document.getElementById('btn-add-cliente').onclick = () => {
-        const nombre = document.getElementById('cliente-nombre').value.trim();
-        const tipo = document.getElementById('cliente-tipo').value;
-        if (!nombre) return alert('Escribe el nombre del negocio');
-        if (!db[cfg.ruta]) db[cfg.ruta] = { congelador: [], sin: [] };
-        const arr = tipo === 'congelador' ? db[cfg.ruta].congelador : db[cfg.ruta].sin;
-        arr.push(nombre);
-        save(KEY_CLIENTS, db);
-        document.getElementById('cliente-nombre').value = '';
-        buildClientSelects();
-        renderDBList();
-        alert('Cliente agregado a la ruta ' + cfg.ruta);
-      };
-    }
-
-    if (document.getElementById('toggle-db')) {
-      document.getElementById('toggle-db').onclick = () => {
-        const el = document.getElementById('db-list');
-        el.style.display = el.style.display === 'none' ? 'block' : 'none';
-        if (el.style.display === 'block') renderDBList();
-      };
+    function renderVentasTable() {
+      const rows = currentSales().map(v => `
+        <tr>
+          <td>${v.fecha}</td>
+          <td>${v.tipo === 'congelador' ? 'Con congelador' : 'Sin congelador'}</td>
+          <td>${escapeHtml(v.cliente)}</td>
+          <td>${Q(v.monto)}</td>
+          <td><button class="btn" data-edit="${v.id}">Editar</button> <button class="btn danger" data-del="${v.id}">Borrar</button></td>
+        </tr>`).join('');
+      $('#tabla-ventas tbody').innerHTML = rows;
+      $$('[data-edit]').forEach(b => b.onclick = () => openEdit(b.dataset.edit));
+      $$('[data-del]').forEach(b => b.onclick = () => delVenta(b.dataset.del));
     }
 
     function renderDBList() {
-      const wrap = document.getElementById('db-list');
-      if (!wrap) return;
-      const route = db[cfg.ruta] || { congelador: [], sin: [] };
-      wrap.innerHTML = `
-        <div class='subrow'>
-          <span class='muted'>Ruta <strong>${escapeHtml(cfg.ruta)}</strong></span>
-          <span class='pill'>${route.congelador.length} con · ${route.sin.length} sin</span>
+      const r = routeData();
+      $('#db-list').innerHTML = `
+        <div class="subrow">
+          <span class="muted">Ruta <strong>${escapeHtml(cfg.ruta)}</strong></span>
+          <span class="pill">${r.congelador.length} con · ${r.sin.length} sin</span>
         </div>
-        <div style='display:grid;gap:8px;margin-top:8px'>
-          <div>
-            <h3>Listado A (congelador)</h3>
-            <ul style='margin:6px 0 0 16px'>
-              ${route.congelador.map(c => `<li>${escapeHtml(c)}</li>`).join('') || '<li><em>Vacío</em></li>'}
-            </ul>
-          </div>
-          <div>
-            <h3>Listado B (sin congelador)</h3>
-            <ul style='margin:6px 0 0 16px'>
-              ${route.sin.map(c => `<li>${escapeHtml(c)}</li>`).join('') || '<li><em>Vacío</em></li>'}
-            </ul>
-          </div>
+        <div class="db-grid">
+          <div><h3>Listado A (congelador)</h3><ul class="db-list-ul">${r.congelador.map(c => `<li>${escapeHtml(c)}</li>`).join('') || '<li><em>Vacío</em></li>'}</ul></div>
+          <div><h3>Listado B (sin congelador)</h3><ul class="db-list-ul">${r.sin.map(c => `<li>${escapeHtml(c)}</li>`).join('') || '<li><em>Vacío</em></li>'}</ul></div>
         </div>`;
     }
 
     function renderDashboard() {
-      const list = currentSales();
-      const total = sum(list);
-      const vcc = sum(list.filter(v => v.tipo === 'congelador'));
-      const vsc = sum(list.filter(v => v.tipo === 'sin'));
-      const clVcc = new Set(list.filter(v => v.tipo === 'congelador').map(v => v.cliente)).size;
-      const clVsc = new Set(list.filter(v => v.tipo === 'sin').map(v => v.cliente)).size;
+      const list = currentSales(), total = sum(list), vccList = list.filter(v => v.tipo === 'congelador'), vscList = list.filter(v => v.tipo === 'sin');
+      const vcc = sum(vccList), vsc = sum(vscList), falta = Math.max(0, cfg.presupuesto - total);
+      const diasTrans = Math.max(1, Math.min(cfg.dias, new Date().getDate()));
+      const avance = cfg.presupuesto > 0 ? total / cfg.presupuesto * 100 : 0;
+      const proy = val => Q(Math.round((val / diasTrans * cfg.dias) * 100) / 100);
+      const coach = avance >= 100 ? '¡Meta cumplida! Buen trabajo' : avance >= 60 ? '¡Casi! Mantén el ritmo' : 'Aún lejos, impulsa ventas';
 
-      setText('#kpi-presupuesto', Q(cfg.presupuesto));
-      setText('#dash-ruta', cfg.ruta);
-      setText('#kpi-vendido', Q(total));
-      const falta = Math.max(0, cfg.presupuesto - total);
-      setText('#kpi-falta', Q(falta));
-
-      const avance = cfg.presupuesto > 0 ? (total / cfg.presupuesto * 100) : 0;
-      const pb = document.getElementById('progress-bar');
-      if (pb) {
-        pb.style.width = Math.min(100, avance).toFixed(1) + '%';
-        pb.style.background = avance >= 100 ? 'var(--ok)' : (avance >= 60 ? 'var(--warn)' : 'var(--danger)');
-      }
-
-      setText('#kpi-global-avance', `${avance.toFixed(1)}%`);
-      const hoy = new Date();
-      const diasTrans = Math.max(1, Math.min(cfg.dias, hoy.getDate()));
-      const promDia = total / diasTrans;
-      const proy = Math.round(promDia * cfg.dias * 100) / 100;
-      setText('#kpi-global-proy', Q(proy));
-      setText('#coach-msg', avance >= 100 ? '¡Meta cumplida! Buen trabajo' : (avance >= 60 ? '¡Casi! Mantén el ritmo' : 'Aún lejos, impulsa ventas'));
-
-      setText('#kpi-vcc', Q(vcc));
-      setText('#kpi-vcc-clientes', clVcc);
-      const avVcc = cfg.presupuesto ? (vcc / cfg.presupuesto * 100) : 0;
-      setText('#kpi-vcc-avance', `${avVcc.toFixed(1)}%`);
-      setText('#kpi-vcc-presupuesto-label', Q(cfg.presupuesto));
-      setText('#kpi-vcc-proy', Q(Math.round((vcc / diasTrans * cfg.dias) * 100) / 100));
-
-      setText('#kpi-vsc', Q(vsc));
-      setText('#kpi-vsc-clientes', clVsc);
-      const avVsc = cfg.vscMeta > 0 ? (vsc / cfg.vscMeta * 100) : 0;
-      setText('#kpi-vsc-avance', `${avVsc.toFixed(1)}%`);
-      setText('#kpi-vsc-meta-label', Q(cfg.vscMeta));
-      setText('#kpi-vsc-proy', Q(Math.round((vsc / diasTrans * cfg.dias) * 100) / 100));
-    }
-
-    function setText(sel, val) {
-      const el = document.querySelector(sel);
-      if (el) el.textContent = val;
-    }
-
-    function sum(arr) {
-      return arr.reduce((a, b) => a + (+b.monto || 0), 0);
-    }
-
-    function escapeHtml(s) {
-      return (s + '').replace(/[&<>"']/g, m => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '"': '&quot;',
-        "'": '&#39;',
-        '>': '&gt;'
-      }[m] || m));
+      setText('#dash-ruta', cfg.ruta); setText('#kpi-presupuesto', Q(cfg.presupuesto)); setText('#kpi-vendido', Q(total)); setText('#kpi-falta', Q(falta));
+      setText('#kpi-global-avance', `${avance.toFixed(1)}%`); setText('#kpi-global-proy', proy(total)); setText('#coach-msg', coach);
+      setText('#kpi-vcc', Q(vcc)); setText('#kpi-vcc-clientes', new Set(vccList.map(v => v.cliente)).size); setText('#kpi-vcc-avance', `${(cfg.presupuesto ? vcc / cfg.presupuesto * 100 : 0).toFixed(1)}%`); setText('#kpi-vcc-presupuesto-label', Q(cfg.presupuesto)); setText('#kpi-vcc-proy', proy(vcc));
+      setText('#kpi-vsc', Q(vsc)); setText('#kpi-vsc-clientes', new Set(vscList.map(v => v.cliente)).size); setText('#kpi-vsc-avance', `${(cfg.vscMeta > 0 ? vsc / cfg.vscMeta * 100 : 0).toFixed(1)}%`); setText('#kpi-vsc-meta-label', Q(cfg.vscMeta)); setText('#kpi-vsc-proy', proy(vsc));
+      $('#progress-bar').style.cssText = `width:${Math.min(100, avance).toFixed(1)}%;background:${avance >= 100 ? 'var(--ok)' : avance >= 60 ? 'var(--warn)' : 'var(--danger)'}`;
     }
 
     function renderAll() {
       buildClientSelects();
       renderVentasTable();
       renderDashboard();
+      if ($('#db-list').style.display === 'block') renderDBList();
     }
 
-    // Inicializar todo
+    $('#venta-tipo').onchange = buildClientSelects;
+    $('#add-venta').onclick = addVenta;
+    $('#btn-add-cliente').onclick = addCliente;
+    $('#toggle-db').onclick = () => {
+      const el = $('#db-list');
+      el.style.display = el.style.display === 'block' ? 'none' : 'block';
+      if (el.style.display === 'block') renderDBList();
+    };
+    $('#edit-save').onclick = saveEdit;
+    $('#edit-cancel').onclick = closeModal;
+    $$('.modal').forEach(el => el.onclick = e => e.target === el && closeModal());
+
     initTabs();
-    initConfigSelectors();
-
-    if ($('#btn-themes')) {
-      $('#btn-themes').onclick = () => {
-        const m = document.getElementById('modal-themes');
-        if (m) m.classList.add('active');
-      };
-    }
-    if (document.getElementById('themes-close')) {
-      document.getElementById('themes-close').onclick = () => {
-        const m = document.getElementById('modal-themes');
-        if (m) m.classList.remove('active');
-      };
-    }
-
-    initThemesUI(initialTheme);
+    initConfig();
     renderAll();
   </script>
 </body>
