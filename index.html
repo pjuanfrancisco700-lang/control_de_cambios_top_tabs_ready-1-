@@ -317,14 +317,46 @@
       renderAll();
     }
 
-    const base = [['Fresa',4.5],['Guanaba',4.5],['Mora',4.5],['Jocote',4.5],['Mango',4.5],['Paleta de Nutela',7.5],['Twist Arcoiris',3.75],['Cholapiz',1.87]].map(([name,price]) => ({name,price}));
-    const PRECIOS = {'Canal Detalle':Object.fromEntries(base.map(i => [i.name,i.price])),'Super 24':{'Fresa':4.19,'Guanaba':4.19,'Mora':4.19,'Jocote':4.19,'Mango':4.5,'Paleta de Nutela':0,'Twist Arcoiris':3.48,'Cholapiz':0},'Cruz Verde':Object.fromEntries(base.map(i => [i.name,0]))};
+    const PRODUCTOS = [
+      {name:'Paleta Arcoiris', detalle:2.09, super24:2.09, cruzVerde:0},
+      {name:'Paleta Chocolate Crispy', detalle:4.19, super24:4.19, cruzVerde:0},
+      {name:'Paleta Coco', detalle:4.19, super24:4.19, cruzVerde:0},
+      {name:'Paleta Cremosa Arandano', detalle:2.78, super24:2.78, cruzVerde:0},
+      {name:'Paleta Cremosa Frambuesa', detalle:2.78, super24:2.78, cruzVerde:0},
+      {name:'Paleta Cremosa Granadina', detalle:2.79, super24:2.79, cruzVerde:0},
+      {name:'Paleta Cremosa Mandarina', detalle:2.79, super24:2.79, cruzVerde:0},
+      {name:'Paleta Fresa', detalle:4.19, super24:4.19, cruzVerde:0},
+      {name:'Paleta Guanaba', detalle:4.19, super24:4.19, cruzVerde:0},
+      {name:'Paleta Jocote', detalle:4.19, super24:4.19, cruzVerde:0},
+      {name:'Paleta Limon', detalle:4.50, super24:4.50, cruzVerde:0},
+      {name:'Paleta Mango', detalle:4.50, super24:4.50, cruzVerde:0},
+      {name:'Paleta Mango Verde Pepitoria', detalle:4.19, super24:4.19, cruzVerde:0},
+      {name:'Paleta Mora', detalle:4.19, super24:4.19, cruzVerde:0},
+      {name:'Twist Arcoiris', detalle:3.75, super24:3.48, cruzVerde:0},
+      {name:'Chocobanano Mixto', detalle:26.00, super24:26.00, cruzVerde:0},
+      {name:'Chocobanano Sombrella Sin Mani', detalle:4.50, super24:4.50, cruzVerde:0},
+      {name:'Chocobanano Sombrella Con Mani', detalle:4.87, super24:4.87, cruzVerde:0},
+      {name:'Twis Sipi Manzana Limon', detalle:3.48, super24:3.48, cruzVerde:0},
+      {name:'Twis Sipi Punch Uva', detalle:3.48, super24:3.48, cruzVerde:0},
+      {name:'Paleta Vainilla', detalle:4.50, super24:4.50, cruzVerde:0},
+      {name:'Caja Chapina', detalle:22.97, super24:22.97, cruzVerde:0},
+      {name:'Nieve de Fresa Bote', detalle:24.25, super24:24.25, cruzVerde:0},
+      {name:'Helado Paleta Arcoiris', detalle:2.09, super24:2.09, cruzVerde:0},
+      {name:'Helado Paleta Chocolate Crispy', detalle:4.19, super24:4.19, cruzVerde:0}
+    ];
     const MOTIVOS = {'50':{label:'Falta de energía eléctrica (50%)',factor:.5},'100':{label:'Falla del congelador (100%)',factor:1}};
     let canal = 'Canal Detalle', motivoKey = '50', cart = [], query = '';
-    const getPrice = name => PRECIOS[canal][name] ?? 0;
+    const getPrice = name => {
+      const p = PRODUCTOS.find(i => i.name === name);
+      if(!p) return 0;
+      if(canal === 'Canal Detalle') return p.detalle ?? 0;
+      if(canal === 'Super 24') return p.super24 ?? 0;
+      if(canal === 'Cruz Verde') return p.cruzVerde ?? 0;
+      return 0;
+    };
 
     function renderNc(){
-      const list = (query ? base.filter(i => i.name.toLowerCase().includes(query.toLowerCase())) : base);
+      const list = (query ? PRODUCTOS.filter(i => i.name.toLowerCase().includes(query.toLowerCase())) : PRODUCTOS);
       $('#list').innerHTML = list.map(i => { const q = (cart.find(x => x.name === i.name) || {}).qty || 0; return `<div class="nc-item"><div class="nc-left"><div class="row" style="gap:6px;align-items:center"><div class="nc-truncate">${esc(i.name)}</div>${q ? `<span class="nc-chip">x${q}</span>` : ''}</div><div class="muted">${Q(getPrice(i.name))} · ${canal}</div></div><div class="nc-actions"><button data-add="${esc(i.name)}">Agregar</button></div></div>`; }).join('') || '<div class="muted">No hay resultados…</div>';
       $('#cart').innerHTML = cart.length ? cart.map(i => `<div class="row nc-cart-row"><div class="nc-left"><div class="nc-truncate">${esc(i.name)}</div><div class="muted">${i.qty} × ${Q(getPrice(i.name))} = <b>${Q(i.qty * getPrice(i.name))}</b></div></div><div class="nc-mini-row"><button data-dec="${esc(i.name)}">-</button><button data-inc="${esc(i.name)}">+</button><button class="nc-danger" data-remove="${esc(i.name)}">Quitar</button></div></div>`).join('') : '<div class="muted">Aún no hay productos seleccionados.</div>';
       const subtotal = cart.reduce((a,i) => a + i.qty * getPrice(i.name), 0), mot = MOTIVOS[motivoKey];
@@ -351,7 +383,7 @@
       console.assert(semaforo(60)[0] === 'warn', '60% debe ser warn');
       console.assert(semaforo(20)[0] === 'danger', '20% debe ser danger');
       console.assert(sum([{monto:10},{monto:5.5}]) === 15.5, 'sum debe sumar montos');
-      console.assert(getPrice('Fresa') === 4.5, 'Precio Canal Detalle Fresa');
+      console.assert(getPrice('Paleta Arcoiris') === 2.09, 'Precio Canal Detalle Paleta Arcoiris');
     }
 
     $$('.tab').forEach(b => b.onclick = e => { e.preventDefault(); switchTab(b.dataset.tab); });
