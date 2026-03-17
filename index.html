@@ -1,340 +1,567 @@
-import React, { useMemo, useState } from "react";
-import { Home, ArrowLeft, X, Volume2, VolumeX, Settings, Keyboard, Tv, Search, Send, Wifi, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MonitorPlay, List, LayoutGrid, SkipBack, SkipForward, Pause, Play, Hash } from "lucide-react";
-
-const circleBtn =
-  "flex items-center justify-center rounded-full bg-zinc-800 text-white shadow-lg shadow-black/20 active:scale-[0.98] transition";
-
-const smallBtn =
-  "h-20 w-20 flex items-center justify-center rounded-full bg-zinc-800 text-white shadow-md shadow-black/20 active:scale-[0.98] transition";
-
-const pillBtn =
-  "rounded-[2rem] bg-zinc-800 text-white shadow-md shadow-black/20 active:scale-[0.98] transition";
-
-const IconWrap = ({ children }) => <span className="opacity-95">{children}</span>;
-
-export default function TVRemoteLocalApp() {
-  const [tvIp, setTvIp] = useState("192.168.1.45");
-  const [port, setPort] = useState("8060");
-  const [protocol, setProtocol] = useState("http");
-  const [textToSend, setTextToSend] = useState("");
-  const [showKeyboard, setShowKeyboard] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [status, setStatus] = useState("Listo para conectar en la misma red Wi‑Fi.");
-
-  const baseUrl = useMemo(() => {
-    const cleanIp = tvIp.trim();
-    const cleanPort = port.trim();
-    return cleanPort ? `${protocol}://${cleanIp}:${cleanPort}` : `${protocol}://${cleanIp}`;
-  }, [protocol, tvIp, port]);
-
-  async function sendCommand(path, label) {
-    try {
-      setStatus(`Enviando: ${label}…`);
-      const response = await fetch(`${baseUrl}${path}`, {
-        method: "POST",
-        mode: "no-cors",
-      });
-      void response;
-      setStatus(`Comando enviado: ${label}`);
-    } catch (error) {
-      setStatus(
-        "No se pudo enviar el comando. Verifica que el teléfono y la TV estén en la misma red y que la TV acepte control por IP."
-      );
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Control TV Wi-Fi</title>
+  <meta name="theme-color" content="#000000" />
+  <style>
+    :root{
+      --bg:#000;
+      --card:#222327;
+      --card2:#111216;
+      --text:#fff;
+      --muted:#b8bcc7;
+      --blue1:#62c1ff;
+      --blue2:#1b82ff;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 14px 30px rgba(0,0,0,.28);
+      --radius:28px;
     }
-  }
-
-  async function pingTV() {
-    try {
-      setStatus("Probando conexión…");
-      await fetch(baseUrl, { method: "GET", mode: "no-cors" });
-      setStatus("Se intentó conexión con la TV. Si no responde, revisa IP, puerto o protocolo.");
-    } catch {
-      setStatus("No fue posible probar la conexión. Revisa la IP local de la TV.");
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+    body{min-height:100vh}
+    .app{
+      max-width:430px;
+      margin:0 auto;
+      min-height:100vh;
+      padding:18px 16px 28px;
     }
-  }
-
-  function submitText() {
-    if (!textToSend.trim()) {
-      setStatus("Escribe algo antes de enviar.");
-      return;
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
     }
-    sendCommand(`/text?value=${encodeURIComponent(textToSend)}`, `Texto: ${textToSend}`);
-    setShowKeyboard(false);
-  }
+    .title h1{
+      margin:0;
+      font-size:26px;
+      line-height:1;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+    .title p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .icon-btn,.round,.mini,.side,.media-btn,.pill{
+      border:0;
+      color:#fff;
+      cursor:pointer;
+      background:var(--card);
+      box-shadow:var(--shadow);
+    }
+    .icon-btn{
+      width:46px;height:46px;border-radius:16px;font-size:20px;
+    }
+    .status{
+      background:linear-gradient(180deg,#0c0d11,#101219);
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:14px;
+      margin-bottom:18px;
+    }
+    .status-row{
+      display:flex;align-items:center;gap:12px;
+    }
+    .wifi{
+      width:44px;height:44px;border-radius:16px;
+      display:grid;place-items:center;
+      background:rgba(27,130,255,.15);
+      font-size:20px;
+    }
+    .grow{flex:1;min-width:0}
+    .label{font-size:12px;color:var(--muted);margin-bottom:4px}
+    .value{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .test-btn{
+      border:0;border-radius:16px;padding:10px 14px;
+      background:#2387ff;color:#fff;font-weight:700;cursor:pointer;
+    }
+    .status-msg{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      min-height:18px;
+    }
 
-  const controls = {
-    up: () => sendCommand("/keypress/Up", "Arriba"),
-    down: () => sendCommand("/keypress/Down", "Abajo"),
-    left: () => sendCommand("/keypress/Left", "Izquierda"),
-    right: () => sendCommand("/keypress/Right", "Derecha"),
-    ok: () => sendCommand("/keypress/Select", "OK"),
-    home: () => sendCommand("/keypress/Home", "Home"),
-    back: () => sendCommand("/keypress/Back", "Atrás"),
-    exit: () => sendCommand("/keypress/Backspace", "Salir"),
-    volumeUp: () => sendCommand("/keypress/VolumeUp", "Volumen +"),
-    volumeDown: () => sendCommand("/keypress/VolumeDown", "Volumen -"),
-    channelUp: () => sendCommand("/keypress/ChannelUp", "Canal +"),
-    channelDown: () => sendCommand("/keypress/ChannelDown", "Canal -"),
-    mute: () => sendCommand("/keypress/VolumeMute", "Mute"),
-    list: () => sendCommand("/keypress/Info", "Lista"),
-    guide: () => sendCommand("/keypress/Guide", "Guía"),
-    rewind: () => sendCommand("/keypress/Rev", "Retroceder"),
-    play: () => sendCommand("/keypress/Play", "Play"),
-    pause: () => sendCommand("/keypress/Pause", "Pausa"),
-    forward: () => sendCommand("/keypress/Fwd", "Avanzar"),
-    netflix: () => sendCommand("/launch/netflix", "Netflix"),
-    youtube: () => sendCommand("/launch/youtube", "YouTube"),
-    search: () => setShowKeyboard(true),
-    keypad: () => sendCommand("/keypress/Lit_1", "Teclado numérico"),
-    assistant: () => sendCommand("/keypress/Search", "Asistente"),
-  };
+    .top-actions{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      margin-bottom:26px;
+    }
+    .round{
+      aspect-ratio:1/1;
+      border-radius:999px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-size:26px;
+    }
+    .round span{
+      font-size:13px;color:#d8dbe3
+    }
 
-  return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="mx-auto flex min-h-screen max-w-md flex-col px-5 py-6">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Control TV Wi‑Fi</h1>
-            <p className="mt-1 text-sm text-zinc-400">Teléfono y TV conectados a la misma red</p>
-          </div>
-          <button
-            onClick={() => setShowSettings(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-900 text-white"
-          >
-            <Settings size={20} />
-          </button>
+    .pad-wrap{
+      position:relative;
+      width:100%;
+      max-width:360px;
+      height:420px;
+      margin:0 auto 28px;
+    }
+    .side-icon{
+      position:absolute;
+      font-size:21px;
+      color:#efeff6;
+      background:none;
+      border:0;
+      cursor:pointer;
+    }
+    .home{left:0;top:95px}
+    .input{right:0;top:95px}
+    .back{left:0;bottom:105px}
+    .exit{right:0;bottom:105px}
+
+    .pad{
+      width:360px;height:360px;
+      max-width:100%;
+      margin:0 auto;
+      border-radius:999px;
+      background:linear-gradient(145deg,var(--blue1),var(--blue2));
+      position:relative;
+      box-shadow:0 22px 60px rgba(27,130,255,.35);
+    }
+    .pad button{
+      position:absolute;
+      background:none;border:0;color:#fff;cursor:pointer;
+      font-size:56px;line-height:1;
+    }
+    .up{left:50%;top:30px;transform:translateX(-50%)}
+    .down{left:50%;bottom:30px;transform:translateX(-50%)}
+    .left{left:30px;top:50%;transform:translateY(-50%)}
+    .right{right:30px;top:50%;transform:translateY(-50%)}
+    .ok{
+      position:absolute;
+      left:50%;top:50%;
+      transform:translate(-50%,-50%);
+      width:150px;height:150px;
+      border-radius:999px;
+      border:4px solid rgba(255,255,255,.35);
+      background:rgba(0,0,0,.06);
+      color:#fff;
+      font-size:28px;
+      font-weight:800;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+    }
+
+    .middle{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr 1fr;
+      gap:14px;
+      margin-bottom:26px;
+      align-items:stretch;
+    }
+    .side{
+      border-radius:34px;
+      min-height:190px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 0;
+      font-size:28px;
+      font-weight:700;
+    }
+    .side small{
+      font-size:17px;
+      color:#e8ebf2;
+      font-weight:500;
+    }
+    .mini-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      grid-template-rows:1fr 1fr;
+      gap:14px;
+    }
+    .mini{
+      width:100%;
+      aspect-ratio:1/1;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      font-size:18px;
+      padding:10px;
+      text-align:center;
+    }
+
+    .media{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+    }
+    .media-btn{
+      height:64px;
+      border-radius:999px;
+      font-size:28px;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.65);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding:16px;
+      z-index:50;
+    }
+    .modal.show{display:flex}
+    .sheet{
+      width:min(100%,430px);
+      background:#0e1015;
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:18px;
+      box-shadow:0 30px 80px rgba(0,0,0,.45);
+    }
+    .sheet-head{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;
+    }
+    .sheet-head h2{
+      margin:0;font-size:22px;letter-spacing:-.02em
+    }
+    .sheet-head p{
+      margin:5px 0 0;font-size:13px;color:var(--muted)
+    }
+    .close-btn{
+      width:40px;height:40px;border-radius:14px;border:0;background:var(--card);color:#fff;font-size:18px;cursor:pointer;
+    }
+    .field{margin-bottom:12px}
+    .field label{
+      display:block;margin-bottom:7px;font-size:13px;color:var(--muted)
+    }
+    .field input,.field select{
+      width:100%;
+      height:52px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#171921;
+      color:#fff;
+      padding:0 14px;
+      font-size:16px;
+      outline:none;
+    }
+    .note{
+      border:1px solid var(--line);
+      background:#171921;
+      color:var(--muted);
+      border-radius:18px;
+      padding:12px 14px;
+      font-size:13px;
+      line-height:1.4;
+      margin-top:8px;
+    }
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:16px;
+    }
+    .pill{
+      height:50px;
+      border-radius:18px;
+      font-size:15px;
+      font-weight:700;
+    }
+    .primary{background:#2387ff}
+    .ghost{background:var(--card)}
+
+    @media (max-width:390px){
+      .pad-wrap{height:390px}
+      .pad{width:320px;height:320px}
+      .ok{width:136px;height:136px;font-size:25px}
+      .up{top:24px}.down{bottom:24px}.left{left:24px}.right{right:24px}
+      .middle,.top-actions,.media{gap:12px}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="top">
+      <div class="title">
+        <h1>Control TV Wi-Fi</h1>
+        <p>Teléfono y TV conectados a la misma red</p>
+      </div>
+      <button class="icon-btn" id="openSettings">⚙️</button>
+    </section>
+
+    <section class="status">
+      <div class="status-row">
+        <div class="wifi">📶</div>
+        <div class="grow">
+          <div class="label">Conexión local</div>
+          <div class="value" id="baseUrlText">http://192.168.1.45:8060</div>
         </div>
+        <button class="test-btn" id="testBtn">Probar</button>
+      </div>
+      <div class="status-msg" id="statusMsg">Listo para conectar en la misma red Wi-Fi.</div>
+    </section>
 
-        <div className="mb-4 rounded-3xl border border-zinc-800 bg-zinc-950/80 p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/15 text-blue-400">
-              <Wifi size={20} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm text-zinc-400">Conexión local</p>
-              <p className="truncate text-sm font-medium">{baseUrl}</p>
-            </div>
-            <button
-              onClick={pingTV}
-              className="rounded-2xl bg-blue-500 px-4 py-2 text-sm font-medium text-white"
-            >
-              Probar
-            </button>
-          </div>
-          <p className="mt-3 text-sm text-zinc-400">{status}</p>
-        </div>
+    <section class="top-actions">
+      <button class="round" id="openKeyboard">⌨️ <span>Teclado</span></button>
+      <button class="round" id="btn123">123 <span>Números</span></button>
+      <button class="round" id="btnSearch">🔎 <span>Buscar</span></button>
+    </section>
 
-        <div className="mb-6 grid grid-cols-3 gap-4">
-          <button className={`${smallBtn}`} onClick={() => setShowKeyboard(true)}>
-            <div className="flex flex-col items-center gap-2">
-              <Keyboard size={24} />
-              <span className="text-xs text-zinc-300">Teclado</span>
-            </div>
-          </button>
-          <button className={`${smallBtn}`} onClick={controls.keypad}>
-            <div className="flex flex-col items-center gap-2">
-              <Hash size={24} />
-              <span className="text-xs text-zinc-300">123</span>
-            </div>
-          </button>
-          <button className={`${smallBtn}`} onClick={controls.assistant}>
-            <div className="flex flex-col items-center gap-2">
-              <Search size={24} />
-              <span className="text-xs text-zinc-300">Buscar</span>
-            </div>
-          </button>
-        </div>
+    <section class="pad-wrap">
+      <button class="side-icon home" data-path="/keypress/Home" data-label="Home">🏠</button>
+      <button class="side-icon input" data-path="/keypress/InputTuner" data-label="Entrada">⎋</button>
+      <button class="side-icon back" data-path="/keypress/Back" data-label="Atrás">←</button>
+      <button class="side-icon exit" data-path="/keypress/Backspace" data-label="Salir">✕</button>
 
-        <div className="relative mx-auto mb-8 h-[420px] w-full max-w-[360px]">
-          <button onClick={controls.home} className="absolute left-0 top-24 text-zinc-200">
-            <Home size={32} />
-          </button>
-          <button onClick={controls.exit} className="absolute right-0 top-24 text-zinc-200">
-            <MonitorPlay size={32} />
-          </button>
-          <button onClick={controls.back} className="absolute left-0 bottom-24 text-zinc-200">
-            <ArrowLeft size={32} />
-          </button>
-          <button onClick={controls.exit} className="absolute right-0 bottom-24 text-zinc-200">
-            <X size={32} />
-          </button>
+      <div class="pad">
+        <button class="up" data-path="/keypress/Up" data-label="Arriba">⌃</button>
+        <button class="down" data-path="/keypress/Down" data-label="Abajo">⌄</button>
+        <button class="left" data-path="/keypress/Left" data-label="Izquierda">‹</button>
+        <button class="right" data-path="/keypress/Right" data-label="Derecha">›</button>
+        <button class="ok" data-path="/keypress/Select" data-label="OK">ok</button>
+      </div>
+    </section>
 
-          <div className="absolute inset-x-8 top-0 mx-auto h-[360px] w-[360px] rounded-full bg-gradient-to-br from-sky-300 to-blue-600 shadow-[0_20px_60px_rgba(59,130,246,0.35)]">
-            <button onClick={controls.up} className="absolute left-1/2 top-11 -translate-x-1/2 text-white">
-              <ChevronUp size={44} />
-            </button>
-            <button onClick={controls.down} className="absolute bottom-11 left-1/2 -translate-x-1/2 text-white">
-              <ChevronDown size={44} />
-            </button>
-            <button onClick={controls.left} className="absolute left-11 top-1/2 -translate-y-1/2 text-white">
-              <ChevronLeft size={44} />
-            </button>
-            <button onClick={controls.right} className="absolute right-11 top-1/2 -translate-y-1/2 text-white">
-              <ChevronRight size={44} />
-            </button>
+    <section class="middle">
+      <button class="side" id="volBtn">
+        <span>+</span>
+        <small>vol</small>
+        <span>−</span>
+      </button>
 
-            <button
-              onClick={controls.ok}
-              className="absolute left-1/2 top-1/2 flex h-44 w-44 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-white/30 bg-blue-500/40 text-3xl font-semibold text-white backdrop-blur-sm"
-            >
-              ok
-            </button>
-          </div>
-        </div>
-
-        <div className="mb-6 grid grid-cols-[1fr_1fr_1fr_1fr] gap-4">
-          <button onClick={controls.volumeUp} className={`${pillBtn} row-span-2 flex min-h-[180px] flex-col items-center justify-between py-7`}>
-            <span className="text-5xl">+</span>
-            <span className="text-2xl text-zinc-200">vol</span>
-            <span className="text-5xl">−</span>
-          </button>
-
-          <button onClick={controls.mute} className={smallBtn}>
-            <IconWrap><VolumeX size={28} /></IconWrap>
-          </button>
-          <button onClick={() => setShowSettings(true)} className={smallBtn}>
-            <IconWrap><Settings size={28} /></IconWrap>
-          </button>
-
-          <button onClick={controls.channelUp} className={`${pillBtn} row-span-2 flex min-h-[180px] flex-col items-center justify-between py-7`}>
-            <ChevronUp size={34} />
-            <span className="text-2xl text-zinc-200">ch</span>
-            <ChevronDown size={34} />
-          </button>
-
-          <button onClick={controls.list} className={smallBtn}>
-            <span className="text-2xl">list</span>
-          </button>
-          <button onClick={controls.guide} className={smallBtn}>
-            <span className="text-2xl">guide</span>
-          </button>
-        </div>
-
-        <div className="mt-auto grid grid-cols-4 gap-4 pb-2">
-          <button onClick={controls.rewind} className={`${pillBtn} flex h-16 items-center justify-center`}>
-            <SkipBack size={28} />
-          </button>
-          <button onClick={controls.play} className={`${pillBtn} flex h-16 items-center justify-center`}>
-            <Play size={28} />
-          </button>
-          <button onClick={controls.pause} className={`${pillBtn} flex h-16 items-center justify-center`}>
-            <Pause size={28} />
-          </button>
-          <button onClick={controls.forward} className={`${pillBtn} flex h-16 items-center justify-center`}>
-            <SkipForward size={28} />
-          </button>
-        </div>
+      <div class="mini-grid">
+        <button class="mini" data-path="/keypress/VolumeMute" data-label="Mute">🔇</button>
+        <button class="mini" id="openSettings2">⚙️</button>
+        <button class="mini" data-path="/keypress/Info" data-label="Lista">list</button>
+        <button class="mini" data-path="/keypress/Guide" data-label="Guía">guide</button>
       </div>
 
-      {showKeyboard && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/60 p-4 sm:items-center sm:justify-center">
-          <div className="w-full max-w-md rounded-[2rem] border border-zinc-800 bg-zinc-950 p-5 shadow-2xl shadow-black/40">
-            <div className="mb-4 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold">Enviar texto a la TV</h2>
-                <p className="text-sm text-zinc-400">Escribe aquí para buscar más rápido</p>
-              </div>
-              <button onClick={() => setShowKeyboard(false)} className="rounded-xl bg-zinc-900 p-2">
-                <X size={18} />
-              </button>
-            </div>
-            <input
-              autoFocus
-              value={textToSend}
-              onChange={(e) => setTextToSend(e.target.value)}
-              placeholder="Buscar en YouTube, Netflix o apps"
-              className="mb-4 h-14 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 text-base text-white outline-none ring-0 placeholder:text-zinc-500"
-            />
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setShowKeyboard(false)}
-                className="h-12 rounded-2xl bg-zinc-800 text-white"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={submitText}
-                className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-blue-500 text-white"
-              >
-                <Send size={18} /> Enviar
-              </button>
-            </div>
-          </div>
+      <button class="side" id="chBtn">
+        <span>⌃</span>
+        <small>ch</small>
+        <span>⌄</span>
+      </button>
+    </section>
+
+    <section class="media">
+      <button class="media-btn" data-path="/keypress/Rev" data-label="Retroceder">⏮</button>
+      <button class="media-btn" data-path="/keypress/Play" data-label="Play">▶</button>
+      <button class="media-btn" data-path="/keypress/Pause" data-label="Pausa">⏸</button>
+      <button class="media-btn" data-path="/keypress/Fwd" data-label="Avanzar">⏭</button>
+    </section>
+  </main>
+
+  <div class="modal" id="keyboardModal">
+    <div class="sheet">
+      <div class="sheet-head">
+        <div>
+          <h2>Enviar texto a la TV</h2>
+          <p>Escribe aquí para buscar más rápido</p>
         </div>
-      )}
+        <button class="close-btn" data-close="keyboardModal">✕</button>
+      </div>
 
-      {showSettings && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/60 p-4 sm:items-center sm:justify-center">
-          <div className="w-full max-w-md rounded-[2rem] border border-zinc-800 bg-zinc-950 p-5 shadow-2xl shadow-black/40">
-            <div className="mb-4 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold">Configuración</h2>
-                <p className="text-sm text-zinc-400">Datos de conexión local</p>
-              </div>
-              <button onClick={() => setShowSettings(false)} className="rounded-xl bg-zinc-900 p-2">
-                <X size={18} />
-              </button>
-            </div>
+      <div class="field">
+        <label for="textToSend">Texto</label>
+        <input id="textToSend" type="text" placeholder="Buscar en YouTube, Netflix o apps" />
+      </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="mb-2 block text-sm text-zinc-400">Protocolo</label>
-                <select
-                  value={protocol}
-                  onChange={(e) => setProtocol(e.target.value)}
-                  className="h-12 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 text-white"
-                >
-                  <option value="http">http</option>
-                  <option value="https">https</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm text-zinc-400">IP de la TV</label>
-                <input
-                  value={tvIp}
-                  onChange={(e) => setTvIp(e.target.value)}
-                  placeholder="192.168.1.45"
-                  className="h-12 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 text-white placeholder:text-zinc-500"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm text-zinc-400">Puerto</label>
-                <input
-                  value={port}
-                  onChange={(e) => setPort(e.target.value)}
-                  placeholder="8060"
-                  className="h-12 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 text-white placeholder:text-zinc-500"
-                />
-              </div>
-
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-4 text-sm text-zinc-400">
-                Esta base usa rutas de ejemplo compatibles con varios dispositivos tipo Roku o con un puente local personalizado.
-                Si tu TV usa otro sistema, solo hay que cambiar las rutas de los comandos.
-              </div>
-            </div>
-
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setShowSettings(false)}
-                className="h-12 rounded-2xl bg-zinc-800 text-white"
-              >
-                Cerrar
-              </button>
-              <button
-                onClick={() => {
-                  setShowSettings(false);
-                  pingTV();
-                }}
-                className="h-12 rounded-2xl bg-blue-500 text-white"
-              >
-                Guardar y probar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <div class="actions">
+        <button class="pill ghost" data-close="keyboardModal">Cancelar</button>
+        <button class="pill primary" id="sendTextBtn">Enviar</button>
+      </div>
     </div>
-  );
-}
+  </div>
+
+  <div class="modal" id="settingsModal">
+    <div class="sheet">
+      <div class="sheet-head">
+        <div>
+          <h2>Configuración</h2>
+          <p>Datos de conexión local</p>
+        </div>
+        <button class="close-btn" data-close="settingsModal">✕</button>
+      </div>
+
+      <div class="field">
+        <label for="protocol">Protocolo</label>
+        <select id="protocol">
+          <option value="http">http</option>
+          <option value="https">https</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="tvIp">IP de la TV</label>
+        <input id="tvIp" type="text" value="192.168.1.45" placeholder="192.168.1.45" />
+      </div>
+
+      <div class="field">
+        <label for="port">Puerto</label>
+        <input id="port" type="text" value="8060" placeholder="8060" />
+      </div>
+
+      <div class="note">
+        Esta base usa rutas de ejemplo compatibles con varios dispositivos tipo Roku o con un puente local personalizado.
+        Si tu TV usa otro sistema, solo hay que cambiar las rutas de los comandos.
+      </div>
+
+      <div class="actions">
+        <button class="pill ghost" data-close="settingsModal">Cerrar</button>
+        <button class="pill primary" id="saveSettingsBtn">Guardar y probar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const els = {
+      protocol: document.getElementById('protocol'),
+      tvIp: document.getElementById('tvIp'),
+      port: document.getElementById('port'),
+      baseUrlText: document.getElementById('baseUrlText'),
+      statusMsg: document.getElementById('statusMsg'),
+      keyboardModal: document.getElementById('keyboardModal'),
+      settingsModal: document.getElementById('settingsModal'),
+      textToSend: document.getElementById('textToSend')
+    };
+
+    function getBaseUrl(){
+      const protocol = els.protocol.value.trim() || 'http';
+      const ip = els.tvIp.value.trim() || '192.168.1.45';
+      const port = els.port.value.trim();
+      return port ? `${protocol}://${ip}:${port}` : `${protocol}://${ip}`;
+    }
+
+    function updateBaseUrl(){
+      els.baseUrlText.textContent = getBaseUrl();
+      localStorage.setItem('tv_protocol', els.protocol.value);
+      localStorage.setItem('tv_ip', els.tvIp.value);
+      localStorage.setItem('tv_port', els.port.value);
+    }
+
+    function setStatus(msg){
+      els.statusMsg.textContent = msg;
+    }
+
+    async function sendCommand(path, label, method='POST'){
+      try{
+        setStatus(`Enviando: ${label}…`);
+        await fetch(getBaseUrl() + path, { method, mode:'no-cors' });
+        setStatus(`Comando enviado: ${label}`);
+      }catch(e){
+        setStatus('No se pudo enviar el comando. Verifica que el teléfono y la TV estén en la misma red y que la TV acepte control por IP.');
+      }
+    }
+
+    async function pingTV(){
+      try{
+        setStatus('Probando conexión…');
+        await fetch(getBaseUrl(), { method:'GET', mode:'no-cors' });
+        setStatus('Se intentó conexión con la TV. Si no responde, revisa IP, puerto o protocolo.');
+      }catch(e){
+        setStatus('No fue posible probar la conexión. Revisa la IP local de la TV.');
+      }
+    }
+
+    function openModal(id){
+      document.getElementById(id).classList.add('show');
+    }
+
+    function closeModal(id){
+      document.getElementById(id).classList.remove('show');
+    }
+
+    function loadSaved(){
+      const protocol = localStorage.getItem('tv_protocol');
+      const ip = localStorage.getItem('tv_ip');
+      const port = localStorage.getItem('tv_port');
+
+      if(protocol) els.protocol.value = protocol;
+      if(ip) els.tvIp.value = ip;
+      if(port) els.port.value = port;
+
+      updateBaseUrl();
+    }
+
+    document.getElementById('openKeyboard').onclick = () => openModal('keyboardModal');
+    document.getElementById('btnSearch').onclick = () => openModal('keyboardModal');
+    document.getElementById('openSettings').onclick = () => openModal('settingsModal');
+    document.getElementById('openSettings2').onclick = () => openModal('settingsModal');
+    document.getElementById('testBtn').onclick = pingTV;
+
+    document.getElementById('saveSettingsBtn').onclick = () => {
+      updateBaseUrl();
+      closeModal('settingsModal');
+      pingTV();
+    };
+
+    document.getElementById('sendTextBtn').onclick = () => {
+      const text = els.textToSend.value.trim();
+      if(!text){
+        setStatus('Escribe algo antes de enviar.');
+        return;
+      }
+      sendCommand(`/text?value=${encodeURIComponent(text)}`, `Texto: ${text}`);
+      closeModal('keyboardModal');
+    };
+
+    document.getElementById('btn123').onclick = () => {
+      sendCommand('/keypress/Lit_1', 'Teclado numérico');
+    };
+
+    els.protocol.addEventListener('change', updateBaseUrl);
+    els.tvIp.addEventListener('input', updateBaseUrl);
+    els.port.addEventListener('input', updateBaseUrl);
+
+    document.querySelectorAll('[data-close]').forEach(btn=>{
+      btn.addEventListener('click', () => closeModal(btn.dataset.close));
+    });
+
+    document.querySelectorAll('[data-path]').forEach(btn=>{
+      btn.addEventListener('click', () => {
+        sendCommand(btn.dataset.path, btn.dataset.label || 'Comando');
+      });
+    });
+
+    document.getElementById('volBtn').addEventListener('click', (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const half = rect.top + rect.height / 2;
+      if(e.clientY < half){
+        sendCommand('/keypress/VolumeUp', 'Volumen +');
+      }else{
+        sendCommand('/keypress/VolumeDown', 'Volumen -');
+      }
+    });
+
+    document.getElementById('chBtn').addEventListener('click', (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const half = rect.top + rect.height / 2;
+      if(e.clientY < half){
+        sendCommand('/keypress/ChannelUp', 'Canal +');
+      }else{
+        sendCommand('/keypress/ChannelDown', 'Canal -');
+      }
+    });
+
+    document.querySelectorAll('.modal').forEach(modal=>{
+      modal.addEventListener('click', (e)=>{
+        if(e.target === modal) modal.classList.remove('show');
+      });
+    });
+
+    loadSaved();
+  </script>
+</body>
+</html>
