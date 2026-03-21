@@ -719,18 +719,21 @@
         return Promise.resolve({ ok:true, id: Math.floor(Math.random()*9000)+1000 });
       }
 
-  if (params.action === "transfer_respond") {
-  state.history = [{
-    id: String(Date.now()),
-    fecha: new Date().toISOString(),
-    tipo: params.decision === "APROBAR" ? "TRANSFER_APPROVED" : "TRANSFER_REJECTED",
-    de: "17030",
-    para: state.ruta,
-    plan: "M2601310",
-    cantidad: 5
-  }, ...(state.history || [])].slice(0, 30);
-  return Promise.resolve({ ok:true });
-}
+        if (params.action === "transfer_respond") {
+        state.history = [{
+          id: String(Date.now()),
+          fecha: new Date().toISOString(),
+          tipo: params.decision === "APROBAR" ? "TRANSFER_APPROVED" : "TRANSFER_REJECTED",
+          de: "17030",
+          para: state.ruta,
+          plan: "M2601310",
+          cantidad: 5
+        }, ...(state.history || [])].slice(0, 30);
+        return Promise.resolve({ ok:true });
+      }
+
+      return Promise.resolve({ ok:true });
+    }
 
     function showToast(msg, ms = 2600) {
       els.toast.textContent = msg;
