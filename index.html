@@ -16,16 +16,12 @@
       --surface2:#ffffff;
       --text:#0b1220;
       --muted: rgba(11,18,32,.58);
-      --line: rgba(11,18,32,.08);
+      --line: rgba(11,18,32,.10);
 
-      --shadow-sm: 0 10px 22px rgba(0,0,0,.045);
-      --shadow-md: 0 16px 34px rgba(0,0,0,.06);
-      --shadow-lg: 0 24px 60px rgba(0,0,0,.12);
+      --shadow: 0 18px 36px rgba(0, 0, 0, .08);
+      --shadow2: 0 10px 24px rgba(0, 0, 0, .06);
 
-      --radius-lg: 24px;
-      --radius-md: 16px;
-      --radius-sm: 999px;
-
+      --radius: 20px;
       --pad: 16px;
       --tap: 52px;
 
@@ -33,24 +29,29 @@
       --warn:#f4b400;
       --bad:#ff3b30;
 
-      --accent:#0078d4;
-      --accent2:#2b88d8;
-      --accentSoft: rgba(0,120,212,.10);
+      --accent:#0a84ff;
+      --accent2:#007aff;
+      --accentSoft: rgba(10,132,255,.12);
 
-      --sys:"Segoe UI Variable","Segoe UI",Inter,system-ui,-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+      --sys: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI Variable", "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
     }
 
-    *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     html,body{ height:100%; }
+
     body{
       margin:0;
       font-family:var(--sys);
       color:var(--text);
       background:
-        radial-gradient(860px 540px at 12% -10%, rgba(0,120,212,.15), transparent 60%),
-        radial-gradient(760px 520px at 100% 0%, rgba(43,136,216,.12), transparent 58%),
-        linear-gradient(#f8f9fc, #f3f4f8 60%, #eef1f7);
+        radial-gradient(800px 520px at 15% -10%, rgba(10,132,255,.13), transparent 60%),
+        radial-gradient(720px 520px at 100% 0%, rgba(64,156,255,.10), transparent 58%),
+        linear-gradient(#f8f9fc, #f2f2f7 60%, #eef1f6);
       overflow-x:hidden;
     }
 
@@ -68,10 +69,10 @@
     header{
       position: sticky;
       top: 0;
-      z-index: 10;
-      backdrop-filter: blur(20px) saturate(150%);
-      -webkit-backdrop-filter: blur(20px) saturate(150%);
-      background: rgba(248,249,252,.72);
+      z-index: 20;
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      background: rgba(242,242,247,.76);
       border-bottom: 1px solid var(--line);
     }
 
@@ -83,26 +84,45 @@
       padding: 12px var(--pad);
     }
 
-    .title{ display:flex; flex-direction:column; gap:2px; }
-    .title h1{ margin:0; font-size:17px; font-weight:900; letter-spacing:.2px; }
-    .title .sub{ font-size:11px; color:var(--muted); letter-spacing:.2px; }
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .title h1{
+      margin:0;
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:-.2px;
+    }
+
+    .title .sub{
+      font-size:12px;
+      color:var(--muted);
+    }
 
     .iconbtn{
       height:40px;
       min-width:40px;
-      border-radius: var(--radius-sm);
-      background: rgba(255,255,255,.84);
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
       border: 1px solid rgba(11,18,32,.08);
       display:inline-flex;
       align-items:center;
       justify-content:center;
       color: var(--text);
-      box-shadow: var(--shadow-sm);
-      transition: transform .12s ease, filter .12s ease, background .15s ease;
+      box-shadow: var(--shadow2);
+      transition: transform .14s ease, filter .14s ease, box-shadow .14s ease;
     }
-    .iconbtn:active{ transform: translateY(1px) scale(.98); filter: brightness(.98); }
+
+    .iconbtn:active{
+      transform: translateY(1px) scale(.97);
+      filter: brightness(.98);
+    }
 
     .bell{ position:relative; }
+
     .badge{
       position:absolute;
       top:-6px;
@@ -110,38 +130,38 @@
       min-width:18px;
       height:18px;
       padding:0 5px;
-      border-radius:var(--radius-sm);
+      border-radius:999px;
       background: var(--bad);
       color:white;
       font-size:11px;
       line-height:18px;
       text-align:center;
-      border: 2px solid rgba(248,249,252,.96);
+      border: 2px solid rgba(242,242,247,.95);
       display:none;
     }
 
-    main{ padding: 14px var(--pad) 22px; flex:1; }
+    main{
+      padding: 18px var(--pad) 96px;
+      flex:1;
+    }
 
     .card{
-      background: rgba(255,255,255,.94);
+      background: rgba(255,255,255,.92);
       border: 1px solid rgba(11,18,32,.07);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
 
     .screen{ display:none; }
     .screen.active{ display:block; }
 
     .loginWrap{
-      margin-top: 12vh;
-      padding: 22px;
-      max-width: 420px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-top: 14vh;
+      padding: 20px;
     }
 
     .hero{
-      padding: 4px 2px 10px;
+      padding: 6px 4px 4px;
       display:flex;
       flex-direction:column;
       gap:12px;
@@ -149,136 +169,204 @@
     }
 
     .hero .logo{
-      width:56px; height:56px;
+      width:56px;
+      height:56px;
       border-radius: 18px;
       background:
-        radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.88), transparent 62%),
-        linear-gradient(135deg, rgba(58,160,255,1), rgba(123,199,255,1));
-      box-shadow: 0 18px 36px rgba(0,0,0,.12);
-      border: 1px solid rgba(255,255,255,.68);
+        radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.85), transparent 62%),
+        linear-gradient(135deg, rgba(10,132,255,1), rgba(120,196,255,1));
+      box-shadow: 0 18px 32px rgba(0,0,0,.12);
+      border: 1px solid rgba(255,255,255,.65);
     }
 
-    .hero h2{ margin:0; font-size:24px; letter-spacing:.2px; font-weight:900; }
-    .hero p{ margin:0; color:var(--muted); font-size:13px; line-height:1.4; max-width: 260px; }
+    .hero h2{
+      margin:0;
+      font-size:24px;
+      letter-spacing:-.3px;
+      font-weight:900;
+    }
 
-    .field{ padding: 8px 2px 2px; display:flex; flex-direction:column; gap:12px; }
+    .hero p{
+      display:none;
+    }
 
-    .input{
+    .field{
+      padding: 16px 0 0;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .input,
+    select.input{
       height: var(--tap);
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(11,18,32,.10);
+      width:100%;
+      border-radius: 16px;
+      border: 1px solid rgba(11,18,32,.09);
       background: rgba(255,255,255,.94);
       color: var(--text);
       font-size:16px;
       padding: 0 14px;
       outline:none;
-      box-shadow: 0 10px 18px rgba(0,0,0,.04);
-      transition: border-color .15s ease, box-shadow .15s ease, transform .12s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,.04);
+      transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
     }
+
     .input::placeholder{ color: rgba(11,18,32,.32); }
-    .input:focus{
-      border-color: rgba(58,160,255,.42);
-      box-shadow: 0 14px 22px rgba(58,160,255,.12);
+
+    .input:focus,
+    select.input:focus{
+      border-color: rgba(10,132,255,.34);
+      box-shadow: 0 14px 22px rgba(10,132,255,.11);
+    }
+
+    button{
+      transition: transform .14s ease, filter .14s ease, box-shadow .14s ease;
+    }
+
+    button:active{
+      transform: scale(.97);
     }
 
     .btn{
       height: var(--tap);
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(58,160,255,.20);
-      background: linear-gradient(180deg, rgba(58,160,255,1), rgba(0,120,212,.96));
+      border-radius: 16px;
+      border: 1px solid rgba(10,132,255,.18);
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
       color: white;
-      font-weight: 900;
+      font-weight: 800;
       font-size: 15px;
       letter-spacing:.2px;
-      box-shadow: 0 16px 28px rgba(58,160,255,.20);
-      transition: transform .12s ease, filter .12s ease;
+      box-shadow: 0 16px 28px rgba(10,132,255,.18);
     }
-    .btn:active{ transform: translateY(1px) scale(.99); filter: brightness(.98); }
 
     .btn.secondary{
-      background: rgba(255,255,255,.9);
+      background: rgba(255,255,255,.88);
       border: 1px solid rgba(11,18,32,.10);
-      box-shadow: 0 10px 18px rgba(0,0,0,.04);
+      box-shadow: 0 10px 18px rgba(0,0,0,.05);
       color: rgba(11,18,32,.88);
     }
 
-    .row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
 
     .pill{
       font-family: var(--mono);
       font-size:12px;
       padding:6px 10px;
-      border-radius:var(--radius-sm);
+      border-radius:999px;
       border:1px solid rgba(11,18,32,.08);
-      background: rgba(255,255,255,.88);
+      background: rgba(255,255,255,.86);
       color: rgba(11,18,32,.78);
       white-space:nowrap;
-      box-shadow: 0 8px 16px rgba(0,0,0,.03);
+      box-shadow: 0 8px 14px rgba(0,0,0,.03);
     }
 
     .muted{ color: var(--muted); }
 
     .panel{
-      padding: 16px;
-      border-radius: var(--radius-lg);
+      padding: 14px;
+      border-radius: var(--radius);
       border: 1px solid rgba(11,18,32,.07);
-      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.88));
+      background: rgba(255,255,255,.86);
       display:flex;
       flex-direction:column;
       gap:10px;
       margin-bottom: 14px;
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--shadow2);
     }
 
-    .plans{ display:flex; flex-direction:column; gap:12px; }
+    .balanceCard{
+      padding:18px;
+      margin-bottom:14px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      background:
+        radial-gradient(160px 80px at 100% 0%, rgba(10,132,255,.10), transparent 70%),
+        rgba(255,255,255,.94);
+    }
 
-    .plan{
-      position: relative;
-      padding: 16px;
-      border-radius: 20px;
-      border: 1px solid rgba(11,18,32,.07);
-      background: linear-gradient(180deg, rgba(255,255,255,.97), rgba(249,251,255,.92));
+    .balanceTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .balanceLabel{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .balanceBig{
+      font-size:40px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-1px;
+    }
+
+    .balanceMeta{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+
+    .plans{
       display:flex;
       flex-direction:column;
       gap:12px;
-      box-shadow: 0 14px 28px rgba(0,0,0,.05);
-      overflow: hidden;
     }
 
-    .plan::before{
-      content:"";
-      position:absolute;
-      top:0;
-      left:0;
-      right:0;
-      height:4px;
-      background: linear-gradient(90deg, rgba(58,160,255,1), rgba(123,199,255,.76));
+    .plan{
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(11,18,32,.07);
+      background: rgba(255,255,255,.95);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      box-shadow: 0 12px 22px rgba(0,0,0,.05);
+      transition: transform .16s ease, box-shadow .16s ease;
     }
 
-    .planTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .plan:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 18px 30px rgba(0,0,0,.08);
+    }
+
+    .planTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
 
     .planName{
       font-family: var(--mono);
       font-size:12px;
-      color: rgba(11,18,32,.76);
+      color: rgba(11,18,32,.78);
       letter-spacing:.2px;
     }
 
     .planBal{
-      text-align:right;
-      font-size: 34px;
+      font-size: 30px;
       font-weight: 900;
-      letter-spacing: .1px;
-      line-height: .95;
+      letter-spacing: -.4px;
       color: var(--text);
     }
 
     .planBal small{
-      display:block;
       font-size: 12px;
       color: var(--muted);
       font-weight: 800;
-      margin-top: 7px;
+      margin-left: 6px;
     }
 
     .planBal.negative{ color: var(--bad); }
@@ -290,39 +378,40 @@
       color: var(--bad);
     }
 
-    .planActions{ display:flex; gap:12px; }
+    .planActions{
+      display:flex;
+      gap:10px;
+    }
 
     .mini{
       flex:1;
-      height:46px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(11,18,32,.10);
-      background: rgba(255,255,255,.9);
+      height:44px;
+      border-radius: 14px;
+      border: 1px solid rgba(11,18,32,.09);
+      background: rgba(255,255,255,.88);
       color: rgba(11,18,32,.88);
       font-weight: 900;
       font-size: 13px;
-      box-shadow: 0 10px 18px rgba(0,0,0,.04);
-      transition: transform .12s ease, filter .12s ease;
+      box-shadow: 0 8px 16px rgba(0,0,0,.04);
     }
-    .mini:active{ transform: translateY(1px) scale(.99); filter: brightness(.985); }
 
     .mini.primary{
-      background: linear-gradient(180deg, #1f8fff, #0078d4);
-      border: 1px solid rgba(58,160,255,.18);
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      border: 1px solid rgba(10,132,255,.16);
       color:#fff;
-      box-shadow: 0 14px 24px rgba(0,120,212,.18);
+      box-shadow: 0 16px 26px rgba(10,132,255,.16);
     }
 
     .toast{
       position:fixed;
       left:50%;
       transform: translateX(-50%);
-      bottom: calc(20px + env(safe-area-inset-bottom));
+      bottom: calc(82px + env(safe-area-inset-bottom));
       width: min(520px, calc(100% - 28px));
       padding: 12px 14px;
       border-radius: 18px;
-      background: rgba(255,255,255,.9);
-      border: 1px solid rgba(11,18,32,.10);
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(11,18,32,.08);
       backdrop-filter: blur(16px) saturate(140%);
       -webkit-backdrop-filter: blur(16px) saturate(140%);
       box-shadow: 0 18px 40px rgba(0,0,0,.10);
@@ -335,7 +424,7 @@
     .modalBack{
       position:fixed;
       inset:0;
-      background: rgba(11,18,32,.36);
+      background: rgba(11,18,32,.34);
       display:none;
       align-items:flex-end;
       justify-content:center;
@@ -346,11 +435,11 @@
     .modal{
       width: min(520px, 100%);
       border-radius: 26px;
-      border: 1px solid rgba(11,18,32,.09);
-      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(11,18,32,.08);
+      background: rgba(255,255,255,.95);
       backdrop-filter: blur(18px) saturate(150%);
       -webkit-backdrop-filter: blur(18px) saturate(150%);
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 30px 80px rgba(0,0,0,.16);
       overflow:hidden;
     }
 
@@ -363,101 +452,156 @@
       border-bottom: 1px solid rgba(11,18,32,.07);
     }
 
-    .modalHead strong{ font-size:14px; }
+    .modalHead strong{
+      font-size:15px;
+    }
 
     .modalBody{
-      padding: 14px 16px 16px;
+      padding: 12px 16px 16px;
       display:flex;
       flex-direction:column;
-      gap:12px;
+      gap:10px;
       max-height: min(78vh, 760px);
       overflow:auto;
     }
 
-    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
 
-    .help{ font-size:12px; color:var(--muted); line-height:1.4; }
+    .help{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
+    }
 
-    .list{ display:flex; flex-direction:column; gap:10px; }
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
 
     .item{
-      position: relative;
-      padding: 13px 13px 13px 16px;
+      padding: 12px 12px 12px 14px;
       border-radius: 18px;
       border: 1px solid rgba(11,18,32,.08);
-      background: rgba(255,255,255,.96);
+      border-left: 4px solid transparent;
+      background: rgba(255,255,255,.94);
       display:flex;
       flex-direction:column;
       gap:8px;
-      box-shadow: 0 10px 22px rgba(0,0,0,.04);
-      overflow:hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,.05);
     }
 
-    .item::before{
-      content:"";
-      position:absolute;
-      left:0;
-      top:10px;
-      bottom:10px;
-      width:4px;
-      border-radius:999px;
-      background: rgba(11,18,32,.12);
+    .itemTop{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
     }
 
-    .itemTop{ display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
-    .itemMeta{ font-family: var(--mono); font-size:12px; color: rgba(11,18,32,.72); }
-    .itemAmt{ font-size: 18px; font-weight: 900; }
+    .itemMeta{
+      font-family: var(--mono);
+      font-size:12px;
+      color: rgba(11,18,32,.72);
+    }
 
-    .itemBtns{ display:flex; gap:10px; }
+    .itemAmt{
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .itemBtns{
+      display:flex;
+      gap:10px;
+    }
 
     .ghost{
       height:44px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(11,18,32,.10);
-      background: rgba(255,255,255,.9);
+      border-radius: 14px;
+      border: 1px solid rgba(11,18,32,.09);
+      background: rgba(255,255,255,.88);
       color: rgba(11,18,32,.90);
       font-weight: 900;
       flex:1;
-      box-shadow: 0 10px 18px rgba(0,0,0,.04);
-      transition: transform .12s ease, filter .12s ease;
+      box-shadow: 0 8px 16px rgba(0,0,0,.04);
     }
-    .ghost:active{ transform: translateY(1px) scale(.99); filter: brightness(.985); }
 
-    .ok{ border-color: rgba(25,178,107,.20); background: rgba(25,178,107,.06); }
-    .danger{ border-color: rgba(255,59,48,.20); background: rgba(255,59,48,.06); }
+    .ok{
+      border-color: rgba(25,178,107,.18);
+      background: rgba(25,178,107,.08);
+    }
 
-    .histUse::before{ background: rgba(0,120,212,.95); }
-    .histOut::before{ background: rgba(244,180,0,.95); }
-    .histIn::before{ background: rgba(25,178,107,.95); }
-    .histApproved::before{ background: rgba(0,120,212,.95); }
-    .histReject::before{ background: rgba(255,59,48,.95); }
+    .danger{
+      border-color: rgba(255,59,48,.18);
+      background: rgba(255,59,48,.08);
+    }
+
+    .histUse{
+      border-left-color: #007aff;
+      background: rgba(0,122,255,.05);
+    }
+
+    .histOut{
+      border-left-color: #f4b400;
+      background: rgba(244,180,0,.08);
+    }
+
+    .histIn{
+      border-left-color: #19b26b;
+      background: rgba(25,178,107,.08);
+    }
+
+    .histApproved{
+      border-left-color: #0a84ff;
+      background: rgba(10,132,255,.08);
+    }
+
+    .histReject{
+      border-left-color: #ff3b30;
+      background: rgba(255,59,48,.08);
+    }
 
     .footerBar{
-      position: sticky;
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
       bottom: 0;
+      width: min(520px, 100%);
       background: rgba(242,242,247,.78);
       border-top: 1px solid var(--line);
       backdrop-filter: blur(18px) saturate(140%);
       -webkit-backdrop-filter: blur(18px) saturate(140%);
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 15;
+      display:none;
     }
 
-    .footerBtns{ padding: 12px var(--pad); display:flex; gap:10px; }
-
-    .emptyState{
-      padding: 24px 16px;
-      text-align:center;
-      border:1px dashed rgba(11,18,32,.12);
-      border-radius:20px;
-      background: rgba(255,255,255,.72);
+    .footerBtns{
+      padding: 12px var(--pad);
+      display:flex;
+      gap:10px;
     }
 
-    .emptyIcon{
-      width:42px;
-      height:42px;
-      margin:0 auto 10px;
-      border-radius:999px;
-      background: rgba(0,120,212,.08);
-      box-shadow: inset 0 0 0 1px rgba(0,120,212,.08);
+    .footerTab{
+      flex:1;
+      height:46px;
+      border-radius: 16px;
+      border: 1px solid rgba(11,18,32,.08);
+      background: rgba(255,255,255,.82);
+      color: rgba(11,18,32,.82);
+      font-size:13px;
+      font-weight:900;
+      box-shadow: 0 8px 18px rgba(0,0,0,.04);
+    }
+
+    .footerTab.active{
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      color:#fff;
+      border-color: rgba(10,132,255,.18);
+      box-shadow: 0 14px 24px rgba(10,132,255,.16);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -511,13 +655,12 @@
           <div class="hero">
             <div class="logo"></div>
             <h2>Ingresar ruta</h2>
-            <p>Accede con tu ID para consultar y gestionar tus recursos.</p>
           </div>
+
           <div class="field">
-            <input class="input" inputmode="numeric" pattern="[0-9]*" id="inpRuta" placeholder="Ej: 17029" />
+            <input class="input" inputmode="numeric" pattern="[0-9]*" id="inpRuta" placeholder="ID de ruta" />
             <button class="btn" id="btnEntrar">Entrar</button>
             <button class="btn secondary" id="btnDemo" title="Solo para prueba visual (no escribe)" style="display:none;">Demo (sin guardar)</button>
-            <div class="help" style="display:none;">Tip: Si tu Apps Script responde lento la primera vez, vuelve a intentar. Queda en caché luego.</div>
           </div>
         </div>
       </section>
@@ -527,19 +670,23 @@
           <div class="row">
             <div>
               <div class="muted" style="font-size:12px;">Ruta</div>
-              <div style="font-size:20px; font-weight:900; letter-spacing:.3px;" id="lblRuta">—</div>
+              <div style="font-size:18px; font-weight:900; letter-spacing:.1px;" id="lblRuta">—</div>
             </div>
             <div class="pill" id="lblPeso">PESO —%</div>
           </div>
-          <div class="row" style="margin-top:4px;">
+
+          <div class="row" style="margin-top:6px;">
             <div class="muted" style="font-size:12px;">Última actualización</div>
             <div class="pill" id="lblUpdated">—</div>
           </div>
         </div>
 
-        <div class="card" style="padding: 14px;">
-          <div class="row" style="padding: 2px 2px 12px;">
-            <strong style="font-size:14px;">Planes</strong>
+        <div class="card balanceCard">
+          <div class="balanceTop">
+            <div>
+              <div class="balanceLabel">Saldo total visible</div>
+              <div class="balanceBig" id="totalSaldo">—</div>
+            </div>
             <button class="iconbtn" id="btnRefresh" aria-label="Actualizar" title="Actualizar">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M21 12a9 9 0 1 1-2.64-6.36" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -547,26 +694,45 @@
               </svg>
             </button>
           </div>
+          <div class="balanceMeta">
+            <span class="pill" id="totalPlanes">Planes —</span>
+            <span class="pill" id="saldoEstadoGeneral">Estado —</span>
+          </div>
+        </div>
 
+        <div class="card" style="padding: 14px;">
+          <div class="row" style="padding: 2px 2px 10px;">
+            <strong style="font-size:14px;">Planes</strong>
+            <span class="muted" style="font-size:12px;">Vista por plan</span>
+          </div>
           <div id="plansList" class="plans"></div>
         </div>
       </section>
     </main>
-    
-  <div class="toast" id="toast"></div>
 
-  <div class="modalBack" id="modalBack">
-    <div class="modal" id="modal">
-      <div class="modalHead">
-        <strong id="modalTitle">—</strong>
-        <button class="iconbtn" id="modalClose" aria-label="Cerrar" title="Cerrar">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-        </button>
+    <div class="footerBar" id="footerBar">
+      <div class="footerBtns">
+        <button class="footerTab active" id="tabHome">Inicio</button>
+        <button class="footerTab" id="tabHistory">Historial</button>
+        <button class="footerTab" id="tabNotifications">Alertas</button>
       </div>
-      <div class="modalBody" id="modalBody"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="modalBack" id="modalBack">
+      <div class="modal" id="modal">
+        <div class="modalHead">
+          <strong id="modalTitle">—</strong>
+          <button class="iconbtn" id="modalClose" aria-label="Cerrar" title="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modalBody" id="modalBody"></div>
+      </div>
     </div>
   </div>
 
@@ -615,6 +781,15 @@
       lblUpdated: $("lblUpdated"),
       plansList: $("plansList"),
       btnRefresh: $("btnRefresh"),
+
+      totalSaldo: $("totalSaldo"),
+      totalPlanes: $("totalPlanes"),
+      saldoEstadoGeneral: $("saldoEstadoGeneral"),
+
+      footerBar: $("footerBar"),
+      tabHome: $("tabHome"),
+      tabHistory: $("tabHistory"),
+      tabNotifications: $("tabNotifications"),
 
       toast: $("toast"),
       modalBack: $("modalBack"),
@@ -905,8 +1080,16 @@
     function setScreen(name) {
       els.screenLogin.classList.remove("active");
       els.screenHome.classList.remove("active");
-      if (name === "login") els.screenLogin.classList.add("active");
-      if (name === "home") els.screenHome.classList.add("active");
+
+      if (name === "login") {
+        els.screenLogin.classList.add("active");
+        els.footerBar.style.display = "none";
+      }
+
+      if (name === "home") {
+        els.screenHome.classList.add("active");
+        els.footerBar.style.display = "block";
+      }
     }
 
     function fmtTime(d) {
@@ -941,7 +1124,16 @@
       els.modalBody.innerHTML = "";
     }
 
-    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, m => ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+      }[m]));
+    }
+
     function escapeAttr(s){ return escapeHtml(s).replace(/"/g, '&quot;'); }
 
     function historyTypeLabel(type){
@@ -963,6 +1155,22 @@
       return "";
     }
 
+    function getTotalSaldo() {
+      return Object.values(state.saldo || {}).reduce((acc, n) => acc + Number(n || 0), 0);
+    }
+
+    function getSaldoStatus(total) {
+      if (total < 0) return "En sobregiro";
+      if (total === 0) return "Sin saldo";
+      return "Disponible";
+    }
+
+    function setActiveTab(name){
+      els.tabHome.classList.toggle("active", name === "home");
+      els.tabHistory.classList.toggle("active", name === "history");
+      els.tabNotifications.classList.toggle("active", name === "notifications");
+    }
+
     function renderHome() {
       els.hdrTitle.textContent = "Recursos";
       els.hdrSub.textContent = `Ruta ${state.ruta || "—"}`;
@@ -973,18 +1181,18 @@
       els.btnHistory.style.display = "inline-flex";
       els.btnBell.style.display = "inline-flex";
       els.btnLogout.style.display = "inline-flex";
-     
+
+      const totalSaldo = getTotalSaldo();
       const plans = Object.keys(state.saldo || {}).sort();
+
+      els.totalSaldo.textContent = `${totalSaldo} u`;
+      els.totalPlanes.textContent = `Planes ${plans.length}`;
+      els.saldoEstadoGeneral.textContent = getSaldoStatus(totalSaldo);
+
       els.plansList.innerHTML = "";
 
       if (!plans.length) {
-        els.plansList.innerHTML = `
-          <div class="emptyState">
-            <div class="emptyIcon"></div>
-            <strong>No hay planes disponibles</strong>
-            <div class="help" style="margin-top:6px;">Revisa los encabezados o la conexión con Google Sheets.</div>
-          </div>
-        `;
+        els.plansList.innerHTML = `<div class="help">No se encontraron planes en el saldo. Revisa los headers en Google Sheets.</div>`;
         return;
       }
 
@@ -995,6 +1203,7 @@
           negativo: bal < 0,
           color: bal < 0 ? "red" : "normal"
         };
+
         const negativeClass = balInfo.negativo ? "negative" : "";
         const negInfoHtml = balInfo.negativo
           ? `<div class="negInfo">Sobregiro: ${Math.abs(bal)} u</div>`
@@ -1006,10 +1215,10 @@
           <div class="planTop">
             <div>
               <div class="planName">${escapeHtml(plan)}</div>
-              <div class="muted" style="font-size:12px; margin-top:6px;">Disponible</div>
+              <div class="muted" style="font-size:12px; margin-top:4px;">Disponible</div>
               ${negInfoHtml}
             </div>
-            <div class="planBal ${negativeClass}">${bal}<small>unidades</small></div>
+            <div class="planBal ${negativeClass}">${bal}<small>u</small></div>
           </div>
           <div class="planActions">
             <button class="mini" data-act="use" data-plan="${escapeAttr(plan)}">Agregar uso</button>
@@ -1020,6 +1229,7 @@
       });
 
       setBadge((state.pendientes || []).length);
+      setActiveTab("home");
     }
 
     async function login(ruta, demo=false) {
@@ -1150,8 +1360,8 @@
 
     function openUseModal(plan) {
       openModal("Agregar uso", `
-        <div class="help">Esto rebaja el saldo del plan <span class="pill">${escapeHtml(plan)}</span> para la ruta <span class="pill">${escapeHtml(state.ruta)}</span>. Si te pasas del disponible, el saldo quedará en rojo y negativo.</div>
-        <input class="input" id="useQty" inputmode="numeric" pattern="[0-9]*" placeholder="Cantidad (ej: 10)" />
+        <div class="help">Esto rebaja el saldo del plan <span class="pill">${escapeHtml(plan)}</span> para la ruta <span class="pill">${escapeHtml(state.ruta)}</span>.</div>
+        <input class="input" id="useQty" inputmode="numeric" pattern="[0-9]*" placeholder="Cantidad" />
         <button class="btn" id="useSend">Guardar uso</button>
         <button class="btn secondary" id="useCancel">Cancelar</button>
       `);
@@ -1201,9 +1411,9 @@
       }).join("");
 
       openModal("Transferir", `
-        <div class="help">Transfiere recurso desde <span class="pill">${escapeHtml(state.ruta)}</span> hacia otra ruta. Se descuenta al enviar y queda pendiente para aceptar.</div>
+        <div class="help">Transfiere recurso desde <span class="pill">${escapeHtml(state.ruta)}</span> hacia otra ruta.</div>
         <div class="grid2">
-          <input class="input" id="trPara" inputmode="numeric" pattern="[0-9]*" placeholder="Ruta destino (ej: 17030)" />
+          <input class="input" id="trPara" inputmode="numeric" pattern="[0-9]*" placeholder="Ruta destino" />
           <input class="input" id="trQty" inputmode="numeric" pattern="[0-9]*" placeholder="Cantidad" />
         </div>
         <select class="input" id="trPlan">${planOptions}</select>
@@ -1244,17 +1454,15 @@
     }
 
     function openNotificationsModal() {
+      setActiveTab("notifications");
       const pend = state.pendientes || [];
+
       if (!pend.length) {
-        openModal("Notificaciones", `
-          <div class="emptyState">
-            <div class="emptyIcon"></div>
-            <strong>No tienes pendientes</strong>
-            <div class="help" style="margin-top:6px;">Aquí aparecerán las transferencias por aceptar.</div>
-          </div>
-          <button class="btn secondary" id="nClose">Cerrar</button>
-        `);
-        $('nClose').onclick = closeModal;
+        openModal("Notificaciones", `<div class="help">No tienes transferencias pendientes.</div><button class="btn secondary" id="nClose">Cerrar</button>`);
+        $('nClose').onclick = () => {
+          closeModal();
+          setActiveTab("home");
+        };
         return;
       }
 
@@ -1286,7 +1494,10 @@
         <button class="btn secondary" id="nClose">Cerrar</button>
       `);
 
-      $('nClose').onclick = closeModal;
+      $('nClose').onclick = () => {
+        closeModal();
+        setActiveTab("home");
+      };
 
       els.modalBody.querySelectorAll("[data-dec]").forEach(btn => {
         btn.addEventListener("click", async () => {
@@ -1308,18 +1519,19 @@
     }
 
     function openHistoryModal() {
+      setActiveTab("history");
       const items = (state.history || []).slice().sort((a,b) => new Date(b.fecha || 0) - new Date(a.fecha || 0));
 
       if (!items.length) {
         openModal("Historial 24 horas", `
-          <div class="emptyState">
-            <div class="emptyIcon"></div>
-            <strong>Sin movimientos recientes</strong>
-            <div class="help" style="margin-top:6px;">Aquí verás tus registros visibles de las últimas 24 horas.</div>
-          </div>
+          <div class="help">Aquí verás tus movimientos más recientes de las últimas 24 horas.</div>
+          <div class="help">No hay movimientos recientes.</div>
           <button class="btn secondary" id="hClose">Cerrar</button>
         `);
-        $('hClose').onclick = closeModal;
+        $('hClose').onclick = () => {
+          closeModal();
+          setActiveTab("home");
+        };
         return;
       }
 
@@ -1353,7 +1565,10 @@
         <button class="btn secondary" id="hClose">Cerrar</button>
       `);
 
-      $('hClose').onclick = closeModal;
+      $('hClose').onclick = () => {
+        closeModal();
+        setActiveTab("home");
+      };
     }
 
     els.btnEntrar.addEventListener("click", async () => {
@@ -1367,13 +1582,27 @@
     });
 
     els.btnRefresh.addEventListener("click", async () => {
-      try{ showToast("Actualizando..."); await refreshSaldo(); await refreshHistory().catch(() => {}); showToast("Actualizado"); }
-      catch(e){ showToast(e.message || "Error"); }
+      try{
+        showToast("Actualizando...");
+        await refreshSaldo();
+        await refreshHistory().catch(() => {});
+        showToast("Actualizado");
+      } catch(e){
+        showToast(e.message || "Error");
+      }
     });
 
     els.btnLogout.addEventListener("click", logout);
     els.btnHistory.addEventListener("click", openHistoryModal);
     els.btnBell.addEventListener("click", openNotificationsModal);
+
+    els.tabHome.addEventListener("click", () => {
+      setActiveTab("home");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    els.tabHistory.addEventListener("click", openHistoryModal);
+    els.tabNotifications.addEventListener("click", openNotificationsModal);
 
     els.plansList.addEventListener("click", (e) => {
       const btn = e.target.closest("button");
@@ -1385,10 +1614,21 @@
       if (act === "transfer") openTransferModal(plan);
     });
 
-    els.modalClose.addEventListener("click", closeModal);
-    els.modalBack.addEventListener("click", (e) => { if (e.target === els.modalBack) closeModal(); });
+    els.modalClose.addEventListener("click", () => {
+      closeModal();
+      setActiveTab("home");
+    });
 
-    els.inpRuta.addEventListener("keydown", (e) => { if (e.key === "Enter") els.btnEntrar.click(); });
+    els.modalBack.addEventListener("click", (e) => {
+      if (e.target === els.modalBack) {
+        closeModal();
+        setActiveTab("home");
+      }
+    });
+
+    els.inpRuta.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") els.btnEntrar.click();
+    });
 
     (function boot(){
       const savedRuta = localStorage.getItem("ruta_id");
@@ -1400,6 +1640,7 @@
         els.btnHistory.style.display = "none";
         els.btnBell.style.display = "none";
         els.btnLogout.style.display = "none";
+        els.footerBar.style.display = "none";
       }
     })();
   </script>
